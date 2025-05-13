@@ -2,7 +2,7 @@
 <ipxact:component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ipxact="http://www.accellera.org/XMLSchema/IPXACT/1685-2014" xmlns:kactus2="http://kactus2.cs.tut.fi" xsi:schemaLocation="http://www.accellera.org/XMLSchema/IPXACT/1685-2014 http://www.accellera.org/XMLSchema/IPXACT/1685-2014/index.xsd">
 	<ipxact:vendor>IObundle</ipxact:vendor>
 	<ipxact:library>IP</ipxact:library>
-	<ipxact:name>IOB-AXIL-MACC</ipxact:name>
+	<ipxact:name>IOB-AXIL-MACC-AXIL</ipxact:name>
 	<ipxact:version>0.81</ipxact:version>
 	<ipxact:busInterfaces>
 		<ipxact:busInterface>
@@ -28,42 +28,78 @@
 		</ipxact:busInterface>
 		<ipxact:busInterface>
 			<ipxact:name>iob_csrs_cbus_s</ipxact:name>
-			<ipxact:displayName>IOb</ipxact:displayName>
+			<ipxact:displayName>AXI-Lite</ipxact:displayName>
 			<ipxact:description>Control and Status Registers interface (auto-generated)</ipxact:description>
-			<ipxact:busType vendor="IObundle" library="IOb" name="iob" version="1.0"/>
+			<ipxact:busType vendor="ARM" library="AXI" name="axil" version="4.0"/>
 			<ipxact:slave/>
 			<ipxact:connectionRequired>true</ipxact:connectionRequired>
 			<portMap>
-				<logicalPort>iob_csrs_iob_valid_i</logicalPort>
-				<physicalPort>iob_csrs_iob_valid_i</physicalPort>
+				<logicalPort>iob_csrs_axil_araddr_i</logicalPort>
+				<physicalPort>iob_csrs_axil_araddr_i</physicalPort>
 			</portMap>
 			<portMap>
-				<logicalPort>iob_csrs_iob_addr_i</logicalPort>
-				<physicalPort>iob_csrs_iob_addr_i</physicalPort>
+				<logicalPort>iob_csrs_axil_arvalid_i</logicalPort>
+				<physicalPort>iob_csrs_axil_arvalid_i</physicalPort>
 			</portMap>
 			<portMap>
-				<logicalPort>iob_csrs_iob_wdata_i</logicalPort>
-				<physicalPort>iob_csrs_iob_wdata_i</physicalPort>
+				<logicalPort>iob_csrs_axil_arready_o</logicalPort>
+				<physicalPort>iob_csrs_axil_arready_o</physicalPort>
 			</portMap>
 			<portMap>
-				<logicalPort>iob_csrs_iob_wstrb_i</logicalPort>
-				<physicalPort>iob_csrs_iob_wstrb_i</physicalPort>
+				<logicalPort>iob_csrs_axil_rdata_o</logicalPort>
+				<physicalPort>iob_csrs_axil_rdata_o</physicalPort>
 			</portMap>
 			<portMap>
-				<logicalPort>iob_csrs_iob_rvalid_o</logicalPort>
-				<physicalPort>iob_csrs_iob_rvalid_o</physicalPort>
+				<logicalPort>iob_csrs_axil_rresp_o</logicalPort>
+				<physicalPort>iob_csrs_axil_rresp_o</physicalPort>
 			</portMap>
 			<portMap>
-				<logicalPort>iob_csrs_iob_rdata_o</logicalPort>
-				<physicalPort>iob_csrs_iob_rdata_o</physicalPort>
+				<logicalPort>iob_csrs_axil_rvalid_o</logicalPort>
+				<physicalPort>iob_csrs_axil_rvalid_o</physicalPort>
 			</portMap>
 			<portMap>
-				<logicalPort>iob_csrs_iob_ready_o</logicalPort>
-				<physicalPort>iob_csrs_iob_ready_o</physicalPort>
+				<logicalPort>iob_csrs_axil_rready_i</logicalPort>
+				<physicalPort>iob_csrs_axil_rready_i</physicalPort>
 			</portMap>
 			<portMap>
-				<logicalPort>iob_csrs_iob_rready_i</logicalPort>
-				<physicalPort>iob_csrs_iob_rready_i</physicalPort>
+				<logicalPort>iob_csrs_axil_awaddr_i</logicalPort>
+				<physicalPort>iob_csrs_axil_awaddr_i</physicalPort>
+			</portMap>
+			<portMap>
+				<logicalPort>iob_csrs_axil_awvalid_i</logicalPort>
+				<physicalPort>iob_csrs_axil_awvalid_i</physicalPort>
+			</portMap>
+			<portMap>
+				<logicalPort>iob_csrs_axil_awready_o</logicalPort>
+				<physicalPort>iob_csrs_axil_awready_o</physicalPort>
+			</portMap>
+			<portMap>
+				<logicalPort>iob_csrs_axil_wdata_i</logicalPort>
+				<physicalPort>iob_csrs_axil_wdata_i</physicalPort>
+			</portMap>
+			<portMap>
+				<logicalPort>iob_csrs_axil_wstrb_i</logicalPort>
+				<physicalPort>iob_csrs_axil_wstrb_i</physicalPort>
+			</portMap>
+			<portMap>
+				<logicalPort>iob_csrs_axil_wvalid_i</logicalPort>
+				<physicalPort>iob_csrs_axil_wvalid_i</physicalPort>
+			</portMap>
+			<portMap>
+				<logicalPort>iob_csrs_axil_wready_o</logicalPort>
+				<physicalPort>iob_csrs_axil_wready_o</physicalPort>
+			</portMap>
+			<portMap>
+				<logicalPort>iob_csrs_axil_bresp_o</logicalPort>
+				<physicalPort>iob_csrs_axil_bresp_o</physicalPort>
+			</portMap>
+			<portMap>
+				<logicalPort>iob_csrs_axil_bvalid_o</logicalPort>
+				<physicalPort>iob_csrs_axil_bvalid_o</physicalPort>
+			</portMap>
+			<portMap>
+				<logicalPort>iob_csrs_axil_bready_i</logicalPort>
+				<physicalPort>iob_csrs_axil_bready_i</physicalPort>
 			</portMap>
 
 		</ipxact:busInterface>
@@ -342,24 +378,8 @@
 				</ipxact:vendorExtensions>
 			</ipxact:port>
 			<ipxact:port>
-				<ipxact:name>iob_csrs_iob_valid_i</ipxact:name>
-				<ipxact:description>Request address is valid.</ipxact:description>
-				<ipxact:wire>
-					<ipxact:direction>in</ipxact:direction>
-					<ipxact:vectors>
-						<ipxact:vector>
-							<ipxact:left>0</ipxact:left>
-							<ipxact:right>0</ipxact:right>
-						</ipxact:vector>
-					</ipxact:vectors>
-				</ipxact:wire>
-				<ipxact:vendorExtensions>
-					<kactus2:portTags>iob_csrs_cbus_s</kactus2:portTags>
-				</ipxact:vendorExtensions>
-			</ipxact:port>
-			<ipxact:port>
-				<ipxact:name>iob_csrs_iob_addr_i</ipxact:name>
-				<ipxact:description>Address.</ipxact:description>
+				<ipxact:name>iob_csrs_axil_araddr_i</ipxact:name>
+				<ipxact:description>Address read channel address.</ipxact:description>
 				<ipxact:wire>
 					<ipxact:direction>in</ipxact:direction>
 					<ipxact:vectors>
@@ -374,8 +394,152 @@
 				</ipxact:vendorExtensions>
 			</ipxact:port>
 			<ipxact:port>
-				<ipxact:name>iob_csrs_iob_wdata_i</ipxact:name>
-				<ipxact:description>Write data.</ipxact:description>
+				<ipxact:name>iob_csrs_axil_arvalid_i</ipxact:name>
+				<ipxact:description>Address read channel valid.</ipxact:description>
+				<ipxact:wire>
+					<ipxact:direction>in</ipxact:direction>
+					<ipxact:vectors>
+						<ipxact:vector>
+							<ipxact:left>0</ipxact:left>
+							<ipxact:right>0</ipxact:right>
+						</ipxact:vector>
+					</ipxact:vectors>
+				</ipxact:wire>
+				<ipxact:vendorExtensions>
+					<kactus2:portTags>iob_csrs_cbus_s</kactus2:portTags>
+				</ipxact:vendorExtensions>
+			</ipxact:port>
+			<ipxact:port>
+				<ipxact:name>iob_csrs_axil_arready_o</ipxact:name>
+				<ipxact:description>Address read channel ready.</ipxact:description>
+				<ipxact:wire>
+					<ipxact:direction>out</ipxact:direction>
+					<ipxact:vectors>
+						<ipxact:vector>
+							<ipxact:left>0</ipxact:left>
+							<ipxact:right>0</ipxact:right>
+						</ipxact:vector>
+					</ipxact:vectors>
+				</ipxact:wire>
+				<ipxact:vendorExtensions>
+					<kactus2:portTags>iob_csrs_cbus_s</kactus2:portTags>
+				</ipxact:vendorExtensions>
+			</ipxact:port>
+			<ipxact:port>
+				<ipxact:name>iob_csrs_axil_rdata_o</ipxact:name>
+				<ipxact:description>Read channel data.</ipxact:description>
+				<ipxact:wire>
+					<ipxact:direction>out</ipxact:direction>
+					<ipxact:vectors>
+						<ipxact:vector>
+							<ipxact:left>DATA_W_ID-1</ipxact:left>
+							<ipxact:right>0</ipxact:right>
+						</ipxact:vector>
+					</ipxact:vectors>
+				</ipxact:wire>
+				<ipxact:vendorExtensions>
+					<kactus2:portTags>iob_csrs_cbus_s</kactus2:portTags>
+				</ipxact:vendorExtensions>
+			</ipxact:port>
+			<ipxact:port>
+				<ipxact:name>iob_csrs_axil_rresp_o</ipxact:name>
+				<ipxact:description>Read channel response.</ipxact:description>
+				<ipxact:wire>
+					<ipxact:direction>out</ipxact:direction>
+					<ipxact:vectors>
+						<ipxact:vector>
+							<ipxact:left>1</ipxact:left>
+							<ipxact:right>0</ipxact:right>
+						</ipxact:vector>
+					</ipxact:vectors>
+				</ipxact:wire>
+				<ipxact:vendorExtensions>
+					<kactus2:portTags>iob_csrs_cbus_s</kactus2:portTags>
+				</ipxact:vendorExtensions>
+			</ipxact:port>
+			<ipxact:port>
+				<ipxact:name>iob_csrs_axil_rvalid_o</ipxact:name>
+				<ipxact:description>Read channel valid.</ipxact:description>
+				<ipxact:wire>
+					<ipxact:direction>out</ipxact:direction>
+					<ipxact:vectors>
+						<ipxact:vector>
+							<ipxact:left>0</ipxact:left>
+							<ipxact:right>0</ipxact:right>
+						</ipxact:vector>
+					</ipxact:vectors>
+				</ipxact:wire>
+				<ipxact:vendorExtensions>
+					<kactus2:portTags>iob_csrs_cbus_s</kactus2:portTags>
+				</ipxact:vendorExtensions>
+			</ipxact:port>
+			<ipxact:port>
+				<ipxact:name>iob_csrs_axil_rready_i</ipxact:name>
+				<ipxact:description>Read channel ready.</ipxact:description>
+				<ipxact:wire>
+					<ipxact:direction>in</ipxact:direction>
+					<ipxact:vectors>
+						<ipxact:vector>
+							<ipxact:left>0</ipxact:left>
+							<ipxact:right>0</ipxact:right>
+						</ipxact:vector>
+					</ipxact:vectors>
+				</ipxact:wire>
+				<ipxact:vendorExtensions>
+					<kactus2:portTags>iob_csrs_cbus_s</kactus2:portTags>
+				</ipxact:vendorExtensions>
+			</ipxact:port>
+			<ipxact:port>
+				<ipxact:name>iob_csrs_axil_awaddr_i</ipxact:name>
+				<ipxact:description>Address write channel address.</ipxact:description>
+				<ipxact:wire>
+					<ipxact:direction>in</ipxact:direction>
+					<ipxact:vectors>
+						<ipxact:vector>
+							<ipxact:left>1</ipxact:left>
+							<ipxact:right>0</ipxact:right>
+						</ipxact:vector>
+					</ipxact:vectors>
+				</ipxact:wire>
+				<ipxact:vendorExtensions>
+					<kactus2:portTags>iob_csrs_cbus_s</kactus2:portTags>
+				</ipxact:vendorExtensions>
+			</ipxact:port>
+			<ipxact:port>
+				<ipxact:name>iob_csrs_axil_awvalid_i</ipxact:name>
+				<ipxact:description>Address write channel valid.</ipxact:description>
+				<ipxact:wire>
+					<ipxact:direction>in</ipxact:direction>
+					<ipxact:vectors>
+						<ipxact:vector>
+							<ipxact:left>0</ipxact:left>
+							<ipxact:right>0</ipxact:right>
+						</ipxact:vector>
+					</ipxact:vectors>
+				</ipxact:wire>
+				<ipxact:vendorExtensions>
+					<kactus2:portTags>iob_csrs_cbus_s</kactus2:portTags>
+				</ipxact:vendorExtensions>
+			</ipxact:port>
+			<ipxact:port>
+				<ipxact:name>iob_csrs_axil_awready_o</ipxact:name>
+				<ipxact:description>Address write channel ready.</ipxact:description>
+				<ipxact:wire>
+					<ipxact:direction>out</ipxact:direction>
+					<ipxact:vectors>
+						<ipxact:vector>
+							<ipxact:left>0</ipxact:left>
+							<ipxact:right>0</ipxact:right>
+						</ipxact:vector>
+					</ipxact:vectors>
+				</ipxact:wire>
+				<ipxact:vendorExtensions>
+					<kactus2:portTags>iob_csrs_cbus_s</kactus2:portTags>
+				</ipxact:vendorExtensions>
+			</ipxact:port>
+			<ipxact:port>
+				<ipxact:name>iob_csrs_axil_wdata_i</ipxact:name>
+				<ipxact:description>Write channel data.</ipxact:description>
 				<ipxact:wire>
 					<ipxact:direction>in</ipxact:direction>
 					<ipxact:vectors>
@@ -390,8 +554,8 @@
 				</ipxact:vendorExtensions>
 			</ipxact:port>
 			<ipxact:port>
-				<ipxact:name>iob_csrs_iob_wstrb_i</ipxact:name>
-				<ipxact:description>Write strobe.</ipxact:description>
+				<ipxact:name>iob_csrs_axil_wstrb_i</ipxact:name>
+				<ipxact:description>Write channel write strobe.</ipxact:description>
 				<ipxact:wire>
 					<ipxact:direction>in</ipxact:direction>
 					<ipxact:vectors>
@@ -406,8 +570,24 @@
 				</ipxact:vendorExtensions>
 			</ipxact:port>
 			<ipxact:port>
-				<ipxact:name>iob_csrs_iob_rvalid_o</ipxact:name>
-				<ipxact:description>Read data valid.</ipxact:description>
+				<ipxact:name>iob_csrs_axil_wvalid_i</ipxact:name>
+				<ipxact:description>Write channel valid.</ipxact:description>
+				<ipxact:wire>
+					<ipxact:direction>in</ipxact:direction>
+					<ipxact:vectors>
+						<ipxact:vector>
+							<ipxact:left>0</ipxact:left>
+							<ipxact:right>0</ipxact:right>
+						</ipxact:vector>
+					</ipxact:vectors>
+				</ipxact:wire>
+				<ipxact:vendorExtensions>
+					<kactus2:portTags>iob_csrs_cbus_s</kactus2:portTags>
+				</ipxact:vendorExtensions>
+			</ipxact:port>
+			<ipxact:port>
+				<ipxact:name>iob_csrs_axil_wready_o</ipxact:name>
+				<ipxact:description>Write channel ready.</ipxact:description>
 				<ipxact:wire>
 					<ipxact:direction>out</ipxact:direction>
 					<ipxact:vectors>
@@ -422,13 +602,13 @@
 				</ipxact:vendorExtensions>
 			</ipxact:port>
 			<ipxact:port>
-				<ipxact:name>iob_csrs_iob_rdata_o</ipxact:name>
-				<ipxact:description>Read data.</ipxact:description>
+				<ipxact:name>iob_csrs_axil_bresp_o</ipxact:name>
+				<ipxact:description>Write response channel response.</ipxact:description>
 				<ipxact:wire>
 					<ipxact:direction>out</ipxact:direction>
 					<ipxact:vectors>
 						<ipxact:vector>
-							<ipxact:left>DATA_W_ID-1</ipxact:left>
+							<ipxact:left>1</ipxact:left>
 							<ipxact:right>0</ipxact:right>
 						</ipxact:vector>
 					</ipxact:vectors>
@@ -438,8 +618,8 @@
 				</ipxact:vendorExtensions>
 			</ipxact:port>
 			<ipxact:port>
-				<ipxact:name>iob_csrs_iob_ready_o</ipxact:name>
-				<ipxact:description>Interface ready.</ipxact:description>
+				<ipxact:name>iob_csrs_axil_bvalid_o</ipxact:name>
+				<ipxact:description>Write response channel valid.</ipxact:description>
 				<ipxact:wire>
 					<ipxact:direction>out</ipxact:direction>
 					<ipxact:vectors>
@@ -454,8 +634,8 @@
 				</ipxact:vendorExtensions>
 			</ipxact:port>
 			<ipxact:port>
-				<ipxact:name>iob_csrs_iob_rready_i</ipxact:name>
-				<ipxact:description>Read data ready.</ipxact:description>
+				<ipxact:name>iob_csrs_axil_bready_i</ipxact:name>
+				<ipxact:description>Write response channel ready.</ipxact:description>
 				<ipxact:wire>
 					<ipxact:direction>in</ipxact:direction>
 					<ipxact:vectors>
