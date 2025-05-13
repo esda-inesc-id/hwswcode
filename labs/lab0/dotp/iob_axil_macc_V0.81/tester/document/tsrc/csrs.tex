@@ -1,0 +1,34 @@
+
+The software accessible registers of the core are described in the following
+tables. The tables give information on the name, read/write capability, address, width in bits, and a textual description.
+\subsubsection{ Configuration}
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{|l|c|c|c|c|X|}
+
+    \hline
+    \rowcolor{iob-green}
+    {\bf Name} & {\bf R/W} & {\bf Addr} & {\bf Width} & {\bf Default} & {\bf Description} \\ \hline
+
+    \input _uart_csrs_tab
+
+  \end{tabularx}
+  \caption{UART software accessible registers}
+  \label{_uart_csrs_tab:is}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{|l|c|c|c|c|X|}
+
+    \hline
+    \rowcolor{iob-green}
+    {\bf Name} & {\bf R/W} & {\bf Addr} & {\bf Width} & {\bf Default} & {\bf Description} \\ \hline
+
+    \input _general_operation_csrs_tab
+
+  \end{tabularx}
+  \caption{General Registers.}
+  \label{_general_operation_csrs_tab:is}
+\end{table}
+\clearpage

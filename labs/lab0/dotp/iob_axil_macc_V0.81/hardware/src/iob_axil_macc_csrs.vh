@@ -1,0 +1,24 @@
+//These macros may be dependent on instance parameters
+//address macros
+//addresses
+`define IOB_AXIL_MACC_CSRS_EN_ADDR 0
+`define IOB_AXIL_MACC_CSRS_EN_W 1
+
+`define IOB_AXIL_MACC_CSRS_DONE_ADDR 1
+`define IOB_AXIL_MACC_CSRS_DONE_W 1
+
+`define IOB_AXIL_MACC_CSRS_LOAD_ADDR 2
+`define IOB_AXIL_MACC_CSRS_LOAD_W 1
+
+`define IOB_AXIL_MACC_CSRS_A_ADDR 3
+`define IOB_AXIL_MACC_CSRS_A_W 8
+
+`define IOB_AXIL_MACC_CSRS_B_ADDR 4
+`define IOB_AXIL_MACC_CSRS_B_W 8
+
+`define IOB_AXIL_MACC_CSRS_C_ADDR 6
+`define IOB_AXIL_MACC_CSRS_C_W 16
+
+`define IOB_AXIL_MACC_CSRS_VERSION_ADDR 8
+`define IOB_AXIL_MACC_CSRS_VERSION_W 16
+

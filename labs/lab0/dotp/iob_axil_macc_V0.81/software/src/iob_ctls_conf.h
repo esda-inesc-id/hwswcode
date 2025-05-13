@@ -1,0 +1,6 @@
+#ifndef H_IOB_CTLS_CONF_H
+#define H_IOB_CTLS_CONF_H
+
+#define IOB_CTLS_VERSION 0x0081
+
+#endif // H_IOB_CTLS_CONF_H

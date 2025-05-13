@@ -1,0 +1,6 @@
+#ifndef H_IOB_PRINTF_CONF_H
+#define H_IOB_PRINTF_CONF_H
+
+#define IOB_PRINTF_VERSION 0x0081
+
+#endif // H_IOB_PRINTF_CONF_H

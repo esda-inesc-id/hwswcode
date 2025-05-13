@@ -1,0 +1,8 @@
+#ifndef H_IOB_TIMER_CONF_H
+#define H_IOB_TIMER_CONF_H
+
+#define IOB_TIMER_DATA_W 32
+#define IOB_TIMER_WDATA_W 1
+#define IOB_TIMER_VERSION 0x0081
+
+#endif // H_IOB_TIMER_CONF_H

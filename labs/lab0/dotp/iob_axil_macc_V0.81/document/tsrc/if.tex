@@ -1,0 +1,32 @@
+The interface signals of the core are described in the following tables.
+Note that the ouput signals are registered in the core, while the input signals are not.
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{|l|l|r|X|}
+
+    \hline
+    \rowcolor{iob-green}
+    {\bf Name} & {\bf Direction} & {\bf Width} & {\bf Description}  \\ \hline \hline
+
+    \input clk_en_rst_s_if_tab
+
+  \end{tabularx}
+  \caption{Clock, clock enable and reset}
+  \label{clk_en_rst_s_if_tab:is}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabularx}{\textwidth}{|l|l|r|X|}
+
+    \hline
+    \rowcolor{iob-green}
+    {\bf Name} & {\bf Direction} & {\bf Width} & {\bf Description}  \\ \hline \hline
+
+    \input iob_csrs_cbus_s_if_tab
+
+  \end{tabularx}
+  \caption{Control and Status Registers interface (auto-generated)}
+  \label{iob_csrs_cbus_s_if_tab:is}
+\end{table}
+\clearpage
