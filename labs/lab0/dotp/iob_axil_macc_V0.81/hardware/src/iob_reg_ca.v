@@ -16,8 +16,8 @@ module iob_reg_ca #(
 );
 
 
-   always @(posedge clk_i, posedge arst_i) begin
-      if (arst_i) begin
+   always @(posedge clk_i, negedge arst_i) begin
+      if (!arst_i) begin
          data_o <= RST_VAL;
       end else if (cke_i) begin
          data_o <= data_i;
