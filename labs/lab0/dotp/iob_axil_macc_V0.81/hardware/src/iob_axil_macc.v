@@ -9,14 +9,23 @@ module iob_axil_macc #(
    input                 cke_i,
    input                 arst_i,
    // iob_csrs_cbus_s: Control and Status Registers interface (auto-generated)
-   input                 iob_csrs_iob_valid_i,
-   input  [       2-1:0] iob_csrs_iob_addr_i,
-   input  [  DATA_W-1:0] iob_csrs_iob_wdata_i,
-   input  [DATA_W/8-1:0] iob_csrs_iob_wstrb_i,
-   output                iob_csrs_iob_rvalid_o,
-   output [  DATA_W-1:0] iob_csrs_iob_rdata_o,
-   output                iob_csrs_iob_ready_o,
-   input                 iob_csrs_iob_rready_i
+   input  [       2-1:0] iob_csrs_axil_araddr_i,
+   input                 iob_csrs_axil_arvalid_i,
+   output                iob_csrs_axil_arready_o,
+   output [  DATA_W-1:0] iob_csrs_axil_rdata_o,
+   output [       2-1:0] iob_csrs_axil_rresp_o,
+   output                iob_csrs_axil_rvalid_o,
+   input                 iob_csrs_axil_rready_i,
+   input  [       2-1:0] iob_csrs_axil_awaddr_i,
+   input                 iob_csrs_axil_awvalid_i,
+   output                iob_csrs_axil_awready_o,
+   input  [  DATA_W-1:0] iob_csrs_axil_wdata_i,
+   input  [DATA_W/8-1:0] iob_csrs_axil_wstrb_i,
+   input                 iob_csrs_axil_wvalid_i,
+   output                iob_csrs_axil_wready_o,
+   output [       2-1:0] iob_csrs_axil_bresp_o,
+   output                iob_csrs_axil_bvalid_o,
+   input                 iob_csrs_axil_bready_i
 );
 
    // Enable
@@ -63,30 +72,39 @@ module iob_axil_macc #(
    // Control/Status Registers
    iob_axil_macc_csrs iob_csrs (
       // clk_en_rst_s port: Clock, clock enable and reset
-      .clk_i       (clk_i),
-      .cke_i       (cke_i),
-      .arst_i      (arst_i),
+      .clk_i         (clk_i),
+      .cke_i         (cke_i),
+      .arst_i        (arst_i),
       // control_if_s port: CSR control interface. Interface type defined by `csr_if` parameter.
-      .iob_valid_i (iob_csrs_iob_valid_i),
-      .iob_addr_i  (iob_csrs_iob_addr_i),
-      .iob_wdata_i (iob_csrs_iob_wdata_i),
-      .iob_wstrb_i (iob_csrs_iob_wstrb_i),
-      .iob_rvalid_o(iob_csrs_iob_rvalid_o),
-      .iob_rdata_o (iob_csrs_iob_rdata_o),
-      .iob_ready_o (iob_csrs_iob_ready_o),
-      .iob_rready_i(iob_csrs_iob_rready_i),
+      .axil_araddr_i (iob_csrs_axil_araddr_i),
+      .axil_arvalid_i(iob_csrs_axil_arvalid_i),
+      .axil_arready_o(iob_csrs_axil_arready_o),
+      .axil_rdata_o  (iob_csrs_axil_rdata_o),
+      .axil_rresp_o  (iob_csrs_axil_rresp_o),
+      .axil_rvalid_o (iob_csrs_axil_rvalid_o),
+      .axil_rready_i (iob_csrs_axil_rready_i),
+      .axil_awaddr_i (iob_csrs_axil_awaddr_i),
+      .axil_awvalid_i(iob_csrs_axil_awvalid_i),
+      .axil_awready_o(iob_csrs_axil_awready_o),
+      .axil_wdata_i  (iob_csrs_axil_wdata_i),
+      .axil_wstrb_i  (iob_csrs_axil_wstrb_i),
+      .axil_wvalid_i (iob_csrs_axil_wvalid_i),
+      .axil_wready_o (iob_csrs_axil_wready_o),
+      .axil_bresp_o  (iob_csrs_axil_bresp_o),
+      .axil_bvalid_o (iob_csrs_axil_bvalid_o),
+      .axil_bready_i (iob_csrs_axil_bready_i),
       // en_o port: en register interface
-      .en_o        (en),
+      .en_o          (en),
       // done_i port: done register interface
-      .done_i      (done_int),
+      .done_i        (done_int),
       // load_o port: load register interface
-      .load_o      (load),
+      .load_o        (load),
       // a_o port: a register interface
-      .a_o         (a),
+      .a_o           (a),
       // b_o port: b register interface
-      .b_o         (b),
+      .b_o           (b),
       // c_i port: c register interface
-      .c_i         (acc)
+      .c_i           (acc)
    );
 
    // en_int register

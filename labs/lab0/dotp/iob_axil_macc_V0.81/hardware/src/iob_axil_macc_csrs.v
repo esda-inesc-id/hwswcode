@@ -10,14 +10,23 @@ module iob_axil_macc_csrs #(
    input                 cke_i,
    input                 arst_i,
    // control_if_s: CSR control interface. Interface type defined by `csr_if` parameter.
-   input                 iob_valid_i,
-   input  [       2-1:0] iob_addr_i,
-   input  [  DATA_W-1:0] iob_wdata_i,
-   input  [DATA_W/8-1:0] iob_wstrb_i,
-   output                iob_rvalid_o,
-   output [  DATA_W-1:0] iob_rdata_o,
-   output                iob_ready_o,
-   input                 iob_rready_i,
+   input  [       2-1:0] axil_araddr_i,
+   input                 axil_arvalid_i,
+   output                axil_arready_o,
+   output [  DATA_W-1:0] axil_rdata_o,
+   output [       2-1:0] axil_rresp_o,
+   output                axil_rvalid_o,
+   input                 axil_rready_i,
+   input  [       2-1:0] axil_awaddr_i,
+   input                 axil_awvalid_i,
+   output                axil_awready_o,
+   input  [  DATA_W-1:0] axil_wdata_i,
+   input  [DATA_W/8-1:0] axil_wstrb_i,
+   input                 axil_wvalid_i,
+   output                axil_wready_o,
+   output [       2-1:0] axil_bresp_o,
+   output                axil_bvalid_o,
+   input                 axil_bready_i,
    // en_o: en register interface
    output                en_o,
    // done_i: done register interface
@@ -121,15 +130,6 @@ module iob_axil_macc_csrs #(
    assign internal_iob_addr_stable = (state == WAIT_RVALID) ? internal_iob_addr_reg : internal_iob_addr;
 
    assign write_en = |internal_iob_wstrb;
-
-   assign internal_iob_valid = iob_valid_i;
-   assign internal_iob_addr = {iob_addr_i, 2'b0};
-   assign internal_iob_wdata = iob_wdata_i;
-   assign internal_iob_wstrb = iob_wstrb_i;
-   assign internal_iob_rready = iob_rready_i;
-   assign iob_rvalid_o = internal_iob_rvalid;
-   assign iob_rdata_o = internal_iob_rdata;
-   assign iob_ready_o = internal_iob_ready;
 
    //write address
    wire [($clog2(WSTRB_W)+1)-1:0] byte_offset;
@@ -347,6 +347,44 @@ module iob_axil_macc_csrs #(
       .data_i(state_nxt),
       // data_o port: Data output
       .data_o(state)
+   );
+
+   // Convert AXI-Lite port into internal IOb interface
+   iob_axil2iob #(
+      .AXIL_ADDR_W(ADDR_W),
+      .AXIL_DATA_W(DATA_W)
+   ) iob_axil2iob_coverter (
+      // clk_en_rst_s port: Clock, clock enable and reset
+      .clk_i         (clk_i),
+      .cke_i         (cke_i),
+      .arst_i        (arst_i),
+      // axil_s port: AXIL interface
+      .axil_araddr_i ({axil_araddr_i, 2'b0}),
+      .axil_arvalid_i(axil_arvalid_i),
+      .axil_arready_o(axil_arready_o),
+      .axil_rdata_o  (axil_rdata_o),
+      .axil_rresp_o  (axil_rresp_o),
+      .axil_rvalid_o (axil_rvalid_o),
+      .axil_rready_i (axil_rready_i),
+      .axil_awaddr_i ({axil_awaddr_i, 2'b0}),
+      .axil_awvalid_i(axil_awvalid_i),
+      .axil_awready_o(axil_awready_o),
+      .axil_wdata_i  (axil_wdata_i),
+      .axil_wstrb_i  (axil_wstrb_i),
+      .axil_wvalid_i (axil_wvalid_i),
+      .axil_wready_o (axil_wready_o),
+      .axil_bresp_o  (axil_bresp_o),
+      .axil_bvalid_o (axil_bvalid_o),
+      .axil_bready_i (axil_bready_i),
+      // iob_m port: CPU native interface
+      .iob_valid_o   (internal_iob_valid),
+      .iob_addr_o    (internal_iob_addr),
+      .iob_wdata_o   (internal_iob_wdata),
+      .iob_wstrb_o   (internal_iob_wstrb),
+      .iob_rvalid_i  (internal_iob_rvalid),
+      .iob_rdata_i   (internal_iob_rdata),
+      .iob_ready_i   (internal_iob_ready),
+      .iob_rready_o  (internal_iob_rready)
    );
 
    // rvalid register
