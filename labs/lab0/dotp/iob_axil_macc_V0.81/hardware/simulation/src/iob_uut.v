@@ -20,43 +20,89 @@ module iob_uut #(
 );
 
    // Testbench axil_macc csrs bus
-   wire          internal_iob_valid;
-   wire [ 2-1:0] internal_iob_addr;
-   wire [32-1:0] internal_iob_wdata;
-   wire [ 4-1:0] internal_iob_wstrb;
-   wire          internal_iob_rvalid;
-   wire [32-1:0] internal_iob_rdata;
-   wire          internal_iob_ready;
-   wire          internal_iob_rready;
+   wire [ 2-1:0] internal_axil_araddr;
+   wire          internal_axil_arvalid;
+   wire          internal_axil_arready;
+   wire [32-1:0] internal_axil_rdata;
+   wire [ 2-1:0] internal_axil_rresp;
+   wire          internal_axil_rvalid;
+   wire          internal_axil_rready;
+   wire [ 2-1:0] internal_axil_awaddr;
+   wire          internal_axil_awvalid;
+   wire          internal_axil_awready;
+   wire [32-1:0] internal_axil_wdata;
+   wire [ 4-1:0] internal_axil_wstrb;
+   wire          internal_axil_wvalid;
+   wire          internal_axil_wready;
+   wire [ 2-1:0] internal_axil_bresp;
+   wire          internal_axil_bvalid;
+   wire          internal_axil_bready;
 
 
 
-   // Directly connect cbus IOb port to internal IOb wires
-   assign internal_iob_valid  = iob_valid_i;
-   assign internal_iob_addr   = iob_addr_i[3:2];  // Ignore 2 LSBs
-   assign internal_iob_wdata  = iob_wdata_i;
-   assign internal_iob_wstrb  = iob_wstrb_i;
-   assign internal_iob_rready = iob_rready_i;
-   assign iob_rvalid_o        = internal_iob_rvalid;
-   assign iob_rdata_o         = internal_iob_rdata;
-   assign iob_ready_o         = internal_iob_ready;
 
-
-   // Unit Under Test (UUT) AXIL_MACC instance with 'iob' interface.
+   // Unit Under Test (UUT) AXIL_MACC instance with 'axil' interface.
    iob_axil_macc axil_macc_inst (
       // clk_en_rst_s port: Clock, clock enable and reset
-      .clk_i                (clk_i),
-      .cke_i                (cke_i),
-      .arst_i               (arst_i),
+      .clk_i                  (clk_i),
+      .cke_i                  (cke_i),
+      .arst_i                 (arst_i),
       // iob_csrs_cbus_s port: Control and Status Registers interface (auto-generated)
-      .iob_csrs_iob_valid_i (internal_iob_valid),
-      .iob_csrs_iob_addr_i  (internal_iob_addr),
-      .iob_csrs_iob_wdata_i (internal_iob_wdata),
-      .iob_csrs_iob_wstrb_i (internal_iob_wstrb),
-      .iob_csrs_iob_rvalid_o(internal_iob_rvalid),
-      .iob_csrs_iob_rdata_o (internal_iob_rdata),
-      .iob_csrs_iob_ready_o (internal_iob_ready),
-      .iob_csrs_iob_rready_i(internal_iob_rready)
+      .iob_csrs_axil_araddr_i (internal_axil_araddr),
+      .iob_csrs_axil_arvalid_i(internal_axil_arvalid),
+      .iob_csrs_axil_arready_o(internal_axil_arready),
+      .iob_csrs_axil_rdata_o  (internal_axil_rdata),
+      .iob_csrs_axil_rresp_o  (internal_axil_rresp),
+      .iob_csrs_axil_rvalid_o (internal_axil_rvalid),
+      .iob_csrs_axil_rready_i (internal_axil_rready),
+      .iob_csrs_axil_awaddr_i (internal_axil_awaddr),
+      .iob_csrs_axil_awvalid_i(internal_axil_awvalid),
+      .iob_csrs_axil_awready_o(internal_axil_awready),
+      .iob_csrs_axil_wdata_i  (internal_axil_wdata),
+      .iob_csrs_axil_wstrb_i  (internal_axil_wstrb),
+      .iob_csrs_axil_wvalid_i (internal_axil_wvalid),
+      .iob_csrs_axil_wready_o (internal_axil_wready),
+      .iob_csrs_axil_bresp_o  (internal_axil_bresp),
+      .iob_csrs_axil_bvalid_o (internal_axil_bvalid),
+      .iob_csrs_axil_bready_i (internal_axil_bready)
+   );
+
+   // Convert IOb port from testbench into AXI-Lite interface for AXIL_MACC CSRs bus
+   iob_iob2axil #(
+      .AXIL_ADDR_W(2),
+      .AXIL_DATA_W(DATA_W)
+   ) iob_iob2axil_coverter (
+      // clk_en_rst_s port: Clock, clock enable and reset
+      .clk_i         (clk_i),
+      .cke_i         (cke_i),
+      .arst_i        (arst_i),
+      // iob_s port: Subordinate IOb interface
+      .iob_valid_i   (iob_valid_i),
+      .iob_addr_i    (iob_addr_i[3:2]),
+      .iob_wdata_i   (iob_wdata_i),
+      .iob_wstrb_i   (iob_wstrb_i),
+      .iob_rvalid_o  (iob_rvalid_o),
+      .iob_rdata_o   (iob_rdata_o),
+      .iob_ready_o   (iob_ready_o),
+      .iob_rready_i  (iob_rready_i),
+      // axil_m port: Manager AXI Lite interface
+      .axil_araddr_o (internal_axil_araddr),
+      .axil_arvalid_o(internal_axil_arvalid),
+      .axil_arready_i(internal_axil_arready),
+      .axil_rdata_i  (internal_axil_rdata),
+      .axil_rresp_i  (internal_axil_rresp),
+      .axil_rvalid_i (internal_axil_rvalid),
+      .axil_rready_o (internal_axil_rready),
+      .axil_awaddr_o (internal_axil_awaddr),
+      .axil_awvalid_o(internal_axil_awvalid),
+      .axil_awready_i(internal_axil_awready),
+      .axil_wdata_o  (internal_axil_wdata),
+      .axil_wstrb_o  (internal_axil_wstrb),
+      .axil_wvalid_o (internal_axil_wvalid),
+      .axil_wready_i (internal_axil_wready),
+      .axil_bresp_i  (internal_axil_bresp),
+      .axil_bvalid_i (internal_axil_bvalid),
+      .axil_bready_o (internal_axil_bready)
    );
 
 
