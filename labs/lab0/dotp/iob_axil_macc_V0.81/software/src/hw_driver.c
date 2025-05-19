@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-#include "iob_uart_csrs.h"
+#include <stdint.h>
 
 // Base Address
 static int base;

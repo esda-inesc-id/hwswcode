@@ -7,18 +7,27 @@
 #include "iob_axil_macc_csrs.h"
 #include <stdio.h>
 
-int iob_core_tb() {
+int main() {
 
   // print welcome message
   printf("IOB AXIL MACC testbench\n");
 
+  iob_axil_macc_csrs_init_baseaddr(0x43c00000);
+  int version = iob_axil_macc_csrs_get_version();
+  printf("version = %x\n", version);
+  
   iob_axil_macc_csrs_set_load(1);
   iob_axil_macc_csrs_set_a(1);
   iob_axil_macc_csrs_set_b(2);
 
   iob_axil_macc_csrs_set_en(1);
-  while (!iob_axil_macc_csrs_get_done())
-    ;
+
+  int done_int;
+
+  do
+    done_int = (int) iob_axil_macc_csrs_get_done();
+  while (done_int == 0);
+  
   iob_axil_macc_csrs_set_en(0);
   iob_axil_macc_csrs_set_load(0);
 
