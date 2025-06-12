@@ -1,10 +1,5 @@
-#include "xil_io.h"
-#include "xil_cache.h"
+#include "xil_cache.h" alternative implmentation
 #include "xil_mmu.h"
-
-#define CPU1_START_ADDR   0xFFFF0000  // RAM1
-#define CPU1_RESET_CTRL   0xF8000240
-#define CPU1_VECTOR_ADDR  0xF8000244
 
 #define COMMAND_ADDR 0x10000000
 #define COMMAND_DATA 0x10000004
@@ -29,7 +24,7 @@ int * data_ptr = COMMAND_DATA;
 *command_ptr = GO;
 //Xil_DCacheFlushRange( command_ptr, 32);
 
-//wait for CPU 1 to finish
+//wait for CPU 1 to finish; use count to timeout
 int count = 0;
 
 while (1) {
