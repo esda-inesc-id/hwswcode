@@ -16,6 +16,9 @@ csim: clean
 # Run csim in gdb with the following command:
 # > gdb ./hls_project/solution1/csim/build/csim.exe
 
+csynth: clean
+	vitis_hls -f scripts/csynth.tcl $(HLS_TOP) $(PART) $(HLS_SRC)
+
 cosim:
 	vitis_hls -f scripts/cosim.tcl
 
