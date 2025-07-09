@@ -2,19 +2,18 @@
 set args [lrange $argv 0 end]
 
 #check if "gdb" is in the arguments
-if {[lsearch -exact $args "gdb=1"] != -1} {
+if {[lsearch -exact $args "-g"] != -1} {
     set gdb 1
 } else {
     set gdb 0
 }
 
 connect
-targets 1
-fpga -f ./app/_ide/bitstream/design_1_wrapper.bit
-source ./platform/hw/ps7_init.tcl
-ps7_init
-ps7_post_config
-after 500
+
+#source ./platform/hw/ps7_init.tcl
+#ps7_init
+#ps7_post_config
+#after 500
 
 targets 2
 rst -processor

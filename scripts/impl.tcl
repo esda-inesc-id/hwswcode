@@ -1,7 +1,6 @@
 
 #extract hls src files, tb and part from command line arguments
 set hls_top [lindex $argv 2]
-set hls_tb [lindex $argv 3]
 set part [lindex $argv 4]
 set hls_srcs [lrange $argv 5 end]
 
@@ -12,8 +11,6 @@ set_top $hls_top
 foreach src $hls_srcs {
     add_files $src
 }
-#add the testbench file
-add_files -tb $hls_tb
 
 #add the part to the project
 open_solution "solution1"
@@ -22,12 +19,9 @@ set_part $part
 #set the target clock period
 create_clock -period 10 -name default
 
-#simulate the design
-cosim_design -wave_debug -trace_level all
-export_design -format ip_catalog
-
 # implement and export the design
-#export_design -format ip_catalog -flow impl 
+export_design -format ip_catalog -flow impl 
+
 close_project
 exit
 

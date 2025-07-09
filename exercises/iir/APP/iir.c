@@ -29,40 +29,40 @@ void iir_filter_sw(float *x, float *y, int N) {
     const float a2 = 0.5f;
 
     //iteration 0
-    float x = x[0];
-    float y = b0 * x0;
+    float xd0 = x[0];
+    float yd0 = b0 * xd0;
     //store results
-    y[0] = y;
+    y[0] = yd0;
 
     // Prepare for next iteration
-    float xd1 = x;
-    float yd1 = y;
+    float xd1 = xd0;
+    float yd1 = yd0;
 
     //iteration 1
-    x = x[1];
-    y = b0 * x + b1 * xd1 - a1 * yd1;
+    xd0 = x[1];
+    yd0 = b0 * xd0 + b1 * xd1 - a1 * yd1;
     //store results
-    y[1] = y;
+    y[1] = yd0;
 
     // Prepare for next iteration
-    xd2 = xd1;
-    yd2 = yd1;
-    xd1 = x;
-    yd1 = y;
+    float xd2 = xd1;
+    float yd2 = yd1;
+    xd1 = xd0;
+    yd1 = yd0;
 
     
         
     for (int i = 2; i < N; i+=1) {
-      x = x[i];
+      xd0 = x[i];
       // Direct Form I computation
-      y = b0 * x + b1 * xd1 + b2 * xd2 - a1 * yd1 - a2 * yd2;
+      yd0 = b0 * xd0 + b1 * xd1 + b2 * xd2 - a1 * yd1 - a2 * yd2;
       // Store results
-      y[i] = y;
+      y[i] = yd0;
       // Prepare for next iteration
       xd2 = xd1;
       yd2 = yd1;
-      xd1 = x;
-      yd1 = y;
+      xd1 = xd0;
+      yd1 = yd0;
     }
 }
 
