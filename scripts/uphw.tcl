@@ -8,19 +8,25 @@ set bd_name "design_1"
 puts [file join $proj_dir "$proj_name.xpr"]
 open_project [file join $proj_dir "$proj_name.xpr"]
 
+
+
 # Regenerate output products for all IPs
 report_ip_status
 upgrade_ip [get_ips *]
 generate_target all [get_files $proj_dir/$proj_name.srcs/sources_1/bd/$bd_name/$bd_name.bd]
 
+#generate hdl wrapper in verilog
+make_wrapper -files [get_files /home/jsousa/Documents/exam2_ws_nogui/src/project_1/project_1.srcs/sources_1/bd/design_1/design_1.bd] -top
+add_files -norecurse /home/jsousa/Documents/exam2_ws_nogui/src/project_1/project_1.gen/sources_1/bd/design_1/hdl/design_1_wrapper.v
+
 # Launch synthesis
-#reset_run synth_1
-#launch_runs synth_1 -jobs 4
-#wait_on_run synth_1
+reset_run synth_1
+launch_runs synth_1 -jobs 4
+wait_on_run synth_1
 
 # Launch implementation
-#launch_runs impl_1 -to_step write_bitstream -jobs 4
-#wait_on_run impl_1
+launch_runs impl_1 -to_step write_bitstream -jobs 4
+wait_on_run impl_1
 
 # Export the hardware platform (XSA)
 write_hw_platform -fixed -include_bit -force -file [file join $proj_dir "${bd_name}\_wrapper.xsa"]

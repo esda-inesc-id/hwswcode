@@ -12,13 +12,13 @@ include $(PDIR)/init.mk
 all: run
 
 #hls c simulation
-csim: clean
+csim:
 	vitis_hls -f scripts/csim.tl $(HLS_TOP) $(HLS_TB) $(PART) $(HLS_SRC)
 # Run csim in gdb with the following command:
 # > gdb ./hls_project/solution1/csim/build/csim.exe
 
 #hls c synthesis
-csynth: clean
+hls_project/solution1/syn/report$/csynth.rpt: $(HLS_SRC)
 	vitis_hls -f scripts/csynth.tcl $(HLS_TOP) $(PART) $(HLS_SRC)
 
 #hls c cosimulation
@@ -26,11 +26,11 @@ cosim:
 	vitis_hls -f scripts/cosim.tcl $(HLS_TOP) $(HLS_TB) $(PART) $(HLS_SRC)
 
 #hls c export ip
-ip: csynth
+hls_project/solution1/impl/export.zip: hls_project/solution1/syn/report$/csynth.rpt
 	vitis_hls -f scripts/ip.tcl $(HLS_TOP) $(PART) $(HLS_SRC)
 
 #hls c implementation
-impl: csynth
+impl: hls_project/solution1/syn/report$/csynth.rpt
 	vitis_hls -f scripts/impl.tcl $(HLS_TOP) $(PART) $(HLS_SRC)
 
 #app 
@@ -43,7 +43,7 @@ app: $(APP_SRC) $(XSA)
 run: app
 	xsct scripts/run.tcl $(DEBUG)
 
-$(XSA): hls_project/solution1/solution1.log
+$(XSA): hls_project/solution1/impl/export.zip 
 	PDIR=$(PDIR) vivado -mode batch -source scripts/uphw.tcl && \
 	xsct scripts/ldhw.tcl $(PDIR)
 
@@ -53,3 +53,6 @@ clean-sw:
 
 clean: clean-sw
 	@rm -rf hls_project
+	@cd $(PDIR)/project_1 && find . -mindepth 1 ! -name 'project_1.xpr' ! -name 'project_1.srcs' ! -path 'project_1.srcs' -exec rm -rf {} +
+
+.PHONY: all csim csynth cosim ip impl app run clean clean-sw
