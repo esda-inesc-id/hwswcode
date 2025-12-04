@@ -1,8 +1,8 @@
 
 #extract hls src files, tb and part from command line arguments
 set hls_top [lindex $argv 2]
-set part [lindex $argv 4]
-set hls_srcs [lrange $argv 5 end]
+set part [lindex $argv 3]
+set hls_srcs [lrange $argv 4 end]
 
 open_project hls_project
 set_top $hls_top
