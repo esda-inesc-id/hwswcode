@@ -1,0 +1,228 @@
+\documentclass [xcolor=svgnames, t] {beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{booktabs, comment}
+\usepackage[absolute, overlay]{textpos}
+\useoutertheme{infolines}
+\setbeamercolor{title in head/foot}{bg=internationalorange}
+\setbeamercolor{author in head/foot}{bg=dodgerblue}
+\usepackage{csquotes}
+\usepackage[style=verbose-ibid,backend=bibtex]{biblatex}
+\bibliography{bibfile}
+\usepackage{amsmath}
+\usepackage[makeroom]{cancel}
+\usepackage{textpos}
+\usepackage{tikz}
+\usepackage{listings}
+\graphicspath{ {./figures/} }
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
+
+\usetheme{Madrid}
+\definecolor{myuniversity}{RGB}{0, 60, 113}
+\definecolor{internationalorange}{RGB}{231, 93,  42}
+ 	\definecolor{dodgerblue}{RGB}{0, 119,202}
+\usecolortheme[named=myuniversity]{structure}
+
+\title[Hardware/Software Codesign]{Hw/Sw-Codesin}
+\subtitle{Create CPU+IP Systems}
+\institute[Técnico]{Técnico}
+\titlegraphic{\includegraphics[height=2.5cm]{figs/Logo.png}}
+\author[José T. de Sousa]{Jos\'e T. de Sousa}
+%\institute[IObundle Lda]{IObundle Lda}
+\date{\today}
+
+
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{footline}%
+    \usebeamercolor[fg]{footline}%
+    \hspace{1em}%
+    \insertframenumber/\inserttotalframenumber
+}
+
+\begin{document}
+
+\begin{frame}
+ \titlepage
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\logo{\includegraphics[scale=0.2]{figs/Logo.png}~%
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{What is This Course About?}
+\begin{center}
+\begin{itemize}
+    \item Designing complete computing systems: \textbf{hardware + software}
+    \item Understanding \textbf{where} to run functionality: CPU or custom hardware
+    \item Joint optimization of:
+    \begin{itemize}
+        \item Performance
+        \item Power and energy
+        \item Area and cost
+        \item Flexibility
+    \end{itemize}
+    \item Learning how modern SoCs are built
+    \item Implementing real systems on a \textbf{Zynq-based FPGA board}
+\end{itemize}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{Why Hardware/Software Codesign?}
+\begin{center}
+\begin{itemize}
+    \item Modern applications are increasingly \textbf{compute-intensive}
+    \begin{itemize}
+        \item Signal processing
+        \item Computer vision
+        \item Machine learning
+        \item Cryptography
+    \end{itemize}
+    \item Pure software solutions are often:
+    \begin{itemize}
+        \item Too slow
+        \item Too power-hungry
+    \end{itemize}
+    \item Pure hardware solutions are often:
+    \begin{itemize}
+        \item Inflexible
+        \item Expensive to modify
+    \end{itemize}
+    \item Codesign allows us to combine the \textbf{best of both worlds}
+\end{itemize}
+\end{center}
+\end{frame}
+
+\begin{frame}{Course Learning Objectives}
+\begin{center}
+\begin{itemize}
+    \item Understand the fundamental principles of \textbf{hardware/software codesign}
+    \item Learn how to analyze applications and identify performance bottlenecks
+    \item Decide which parts of a system should run in:
+    \begin{itemize}
+        \item Software on a CPU
+        \item Custom hardware accelerators
+    \end{itemize}
+    \item Design, implement, and integrate accelerators using:
+    \begin{itemize}
+        \item Vitis HLS
+        \item Verilog RTL
+    \end{itemize}
+    \item Deploy and evaluate complete systems on a Zynq-based FPGA board
+\end{itemize}
+\end{center}
+\end{frame}
+
+\begin{frame}{Tools and Experimental Platform}
+\begin{center}
+\begin{itemize}
+    \item This course is \textbf{hands-on} and tool-oriented
+    \item You will work with industry-standard tools:
+    \begin{itemize}
+        \item \textbf{Vivado} – RTL design, synthesis, implementation
+        \item \textbf{Vitis HLS} – C/C++ to hardware synthesis
+        \item \textbf{Verilog} – low-level hardware design
+    \end{itemize}
+    \item Target platform:
+    \begin{itemize}
+        \item Zynq SoC (ARM CPU + FPGA fabric)
+        \item Zybo development board
+    \end{itemize}
+    \item Software will run in a \textbf{bare-metal} environment
+\end{itemize}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{What Is a Computing System?}
+\begin{center}
+\begin{itemize}
+    \item A computing system is more than just a processor
+    \item It is composed of multiple interacting components:
+    \begin{itemize}
+        \item Processing elements (CPUs, GPUs, accelerators)
+        \item Memory hierarchy (registers, caches, RAM, external memory)
+        \item Interconnects and buses
+        \item Input/Output devices
+        \item Software stack
+    \end{itemize}
+    \item Performance depends on how well these components work \textbf{together}
+    \item Codesign focuses on optimizing the \textbf{whole system}
+\end{itemize}
+\end{center}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+%%%%%example slides
+\begin{frame}{Outline}
+\begin{center}
+  \begin{columns}[onlytextwidth]
+    \column{0.5\textwidth}
+  \begin{itemize}
+  \item Introduction
+  \item Project setup
+  \item Instantiate a RISC-V CPU in IOb-SoC
+  \item Instantiate an IP core in your SoC
+  \item Write the software to drive the IP core
+  \item Simulate IOb-SoC
+  \item Run IOb-SoC on an FPGA board
+  \item Conclusion
+  \end{itemize}
+    \column{0.5\textwidth}
+    \begin{figure}
+      \centering
+      %\includegraphics[width=0.9\textwidth]{bd.pdf}
+      \caption{IOb-SoC block diagram}
+      \label{fig:my_label}
+    \end{figure}
+  \end{columns}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{Introduction}
+\begin{center}
+    \begin{itemize}
+      \item Building processor-based systems from scratch is challenging
+      \item The IOb-SoC template eases this task by providing a base Verilog SoC equipped with
+        \begin{itemize}
+        \item a RISC-V CPU
+        \item a memory system including boot ROM, RAM, 2-level cache system and an AXI4 interface to external memory (DDR)
+        \item a UART communications module
+        \item an example firmware program
+        \end{itemize}
+      \item Users can add IP cores and software to build their SoCs
+      \item This tutorial exemplifies the addition of a Timer IP core and the use of its software driver
+    \end{itemize}
+\end{center}
+\end{frame}
+
+\begin{frame}{Project setup}
+\begin{center}
+  \begin{itemize}
+  \item Use a Linux real or virtual machine (see the README file to download a VM)
+    \item Install {\tt nix-shell} to deal with dependencies, especially open-source simulators such as {\tt iverilog} or {\tt verilator} 
+    \item Commercial EDA tools must be installed locally or on some remote server (Vivado, Quartus, Cadence, etc) 
+    \item FPGA boards must be attached to your Linux machine or to some remote server
+    \item Set up {\bf ssh} access key to GitHub (\url{github.com}) (using https will ask for your password many times)
+    \item Follow the instructions in the IOb-SoC repository's README file to clone the repository and install the tools
+  \end{itemize}
+\end{center}
+\end{frame}
+
+
+\end{document}
