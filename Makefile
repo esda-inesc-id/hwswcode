@@ -13,13 +13,13 @@ all: run
 
 #hls c simulation
 csim:
-	vitis_hls -f scripts/csim.tl $(HLS_TOP) $(HLS_TB) $(PART) $(HLS_SRC)
+	HLS_TOP=$(HLS_TOP) PART=$(PART) HLS_TB=$(HLS_TB) HLS_SRC=$(HLS_SRC) vitis-run --mode hls --tcl scripts/csim.tcl
 # Run csim in gdb with the following command:
 # > gdb ./hls_project/solution1/csim/build/csim.exe
 
 #hls c synthesis
 hls_project/solution1/syn/report$/csynth.rpt: $(HLS_SRC)
-	vitis_hls -f scripts/csynth.tcl $(HLS_TOP) $(PART) $(HLS_SRC)
+	 HLS_TOP=$(HLS_TOP) PART=$(PART) HLS_SRC=$(HLS_SRC) vitis_hls -f scripts/csynth.tcl
 
 #hls c cosimulation
 cosim:
