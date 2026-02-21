@@ -18,6 +18,8 @@ csim:
 # > gdb ./hls_project/solution1/csim/build/csim.exe
 
 #hls c synthesis
+syn: hls_project/solution1/syn/report$/csynth.rpt
+
 hls_project/solution1/syn/report$/csynth.rpt: $(HLS_SRC)
 	 HLS_TOP=$(HLS_TOP) PART=$(PART) HLS_SRC=$(HLS_SRC) vitis-run --mode hls --tcl scripts/csynth.tcl
 
