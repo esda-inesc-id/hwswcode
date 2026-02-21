@@ -19,19 +19,19 @@ csim:
 
 #hls c synthesis
 hls_project/solution1/syn/report$/csynth.rpt: $(HLS_SRC)
-	 HLS_TOP=$(HLS_TOP) PART=$(PART) HLS_SRC=$(HLS_SRC) vitis_hls -f scripts/csynth.tcl
+	 HLS_TOP=$(HLS_TOP) PART=$(PART) HLS_SRC=$(HLS_SRC) vitis-run --mode hls --tcl scripts/csynth.tcl
 
 #hls c cosimulation
 cosim:
-	vitis_hls -f scripts/cosim.tcl $(HLS_TOP) $(HLS_TB) $(PART) $(HLS_SRC)
+	HLS_TOP=$(HLS_TOP) PART=$(PART) HLS_TB=$(HLS_TB) HLS_SRC=$(HLS_SRC) vitis-run --mode hls --tcl scripts/cosim.tcl
 
 #hls c export ip
 hls_project/solution1/impl/export.zip: hls_project/solution1/syn/report$/csynth.rpt
-	vitis_hls -f scripts/ip.tcl $(HLS_TOP) $(PART) $(HLS_SRC)
+	HLS_TOP=$(HLS_TOP) PART=$(PART) HLS_SRC=$(HLS_SRC) vitis-run --mode hls --tcl scripts/ip.tcl
 
 #hls c implementation
 impl: hls_project/solution1/syn/report$/csynth.rpt
-	vitis_hls -f scripts/impl.tcl $(HLS_TOP) $(PART) $(HLS_SRC)
+	HLS_TOP=$(HLS_TOP) PART=$(PART) HLS_SRC=$(HLS_SRC) vitis-run --mode hls --tcl scripts/impl.tcl
 
 #app 
 app: $(APP_SRC) $(XSA)

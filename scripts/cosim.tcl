@@ -1,9 +1,9 @@
 
-#extract hls src files, tb and part from command line arguments
-set hls_top [lindex $argv 2]
-set hls_tb [lindex $argv 3]
-set part [lindex $argv 4]
-set hls_srcs [lrange $argv 5 end]
+#extract env variables
+set hls_top $env(HLS_TOP)
+set hls_tb $env(HLS_TB)
+set part $env(PART)
+set hls_srcs [split $env(HLS_SRC) " "]
 
 open_project hls_project
 set_top $hls_top
