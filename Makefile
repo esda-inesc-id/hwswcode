@@ -9,6 +9,10 @@
 PDIR ?= exercises/iir
 include $(PDIR)/init.mk
 
+XSA=$(PDIR)/project_1/design_1_wrapper.xsa
+IPZIP=hls_project/solution1/impl/export.zip
+ELF=hwsw/Debug/hwsw.elf
+
 all: run
 
 #hls c simulation
@@ -18,9 +22,9 @@ csim:
 # > gdb ./hls_project/solution1/csim/build/csim.exe
 
 #hls c synthesis
-syn: hls_project/solution1/syn/report$/csynth.rpt
+csynth: hls_project/solution1/syn/report/csynth.rpt
 
-hls_project/solution1/syn/report$/csynth.rpt: $(HLS_SRC)
+hls_project/solution1/syn/report/csynth.rpt: $(HLS_SRC)
 	 HLS_TOP=$(HLS_TOP) PART=$(PART) HLS_SRC=$(HLS_SRC) vitis-run --mode hls --tcl scripts/csynth.tcl
 
 #hls c cosimulation
@@ -28,33 +32,36 @@ cosim:
 	HLS_TOP=$(HLS_TOP) PART=$(PART) HLS_TB=$(HLS_TB) HLS_SRC=$(HLS_SRC) vitis-run --mode hls --tcl scripts/cosim.tcl
 
 #hls c export ip
-hls_project/solution1/impl/export.zip: hls_project/solution1/syn/report$/csynth.rpt
+ip: $(IPZIP)
+$(IPZIP): hls_project/solution1/syn/report/csynth.rpt
 	HLS_TOP=$(HLS_TOP) PART=$(PART) HLS_SRC=$(HLS_SRC) vitis-run --mode hls --tcl scripts/ip.tcl
 
 #hls c implementation
-impl: hls_project/solution1/syn/report$/csynth.rpt
+impl: hls_project/solution1/syn/report/csynth.rpt
 	HLS_TOP=$(HLS_TOP) PART=$(PART) HLS_SRC=$(HLS_SRC) vitis-run --mode hls --tcl scripts/impl.tcl
 
-#app 
-app: $(APP_SRC) $(XSA)
-	make clean-sw && xsct scripts/app.tcl $(XSA) $(APP_SRC)
+#hwsw app 
+hwsw: $(ELF)
+
+$(ELF): $(APP_SRC) $(XSA)
+	make clean-sw && xsct scripts/hwsw.tcl $(XSA) $(APP_SRC)
 
 #open picocom in another terminal to see the output:
-#picocom -b 115200 /dev/ttyUSB1 --imap lfcrlf
+picocom:
+	picocom -b 115200 /dev/ttyUSB1 --imap lfcrlf
 
-run: app
+run: $(ELF)
 	xsct scripts/run.tcl $(DEBUG)
 
-$(XSA): hls_project/solution1/impl/export.zip 
-	PDIR=$(PDIR) vivado -mode batch -source scripts/uphw.tcl && \
+$(XSA): $(IPZIP)
+	PDIR=$(PDIR) PART=$(PART) vivado -mode batch -source scripts/uphw.tcl && \
 	xsct scripts/ldhw.tcl $(PDIR)
 
 clean-sw:
-	@rm -rf platform app *.log *.jou logs app_* .analytics .metadata .Xil
+	@rm -rf platform hwsw *.log *.jou logs hwsw_* .analytics .metadata .Xil
 	@find . -name \*~ -delete
 
 clean: clean-sw
-	@rm -rf hls_project
-	@cd $(PDIR)/project_1 && find . -mindepth 1 ! -name 'project_1.xpr' ! -name 'project_1.srcs' ! -path 'project_1.srcs' -exec rm -rf {} +
+	@rm -rf hls_project $(PDIR)/hls/*.log $(PDIR)/hls/*.jou $(PDIR)/hls/solution* hls_project/solution1/syn/report/csynth.rpt hls_project/solution1/impl/export.zip $(PDIR)/project_1 ./app*
 
-.PHONY: all csim csynth cosim ip impl app run clean clean-sw
+.PHONY: all csim csynth cosim ip impl run clean clean-sw picocom

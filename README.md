@@ -1,31 +1,40 @@
 # Hardware/Software Codesign Repository
 
 This repository contains the materials for the Hardware/Software Codesign
-course. The course focuses on optimizing software and developing hardware
-accelerators for embedded systems, using the Xilinx Vitis platform, which
-includes Vitis HLS for hardware accelerator design, Vitis for software
-application development, and Vivado for hardware integration. This repository
-covers the following topics:
-- HLS-based design and simulation
-- IP export for Vivado integration
-- Application development using the exported hardware platform
-- Automated build flow using a Makefile
+course. The course focuses on designing embedded systems that combine embedded
+software running on a processing system (PS) with custom hardware accelerators
+or peripherals implemented in programmable logic (PL).
+
+The course emphasizes the design and implementation of these systems using the
+Xilinx Vitis platform, which includes Vitis HLS for hardware design, Vitis for
+software application development, and Vivado for hardware integration.
+
+This repository covers the following topics:
+- Application analysis on a desktop environment
+- Porting and profiling on a Zynq-based embedded platform
+- Hardware/software partitioning and optimization
+- Hardware design using Vitis HLS
+- IP export and integration using Vivado
+- Platform development and hardware/software application deployment using Vitis
+- Performance analysis and optimization techniques
 
 ---
 
 ## Requirements
 
-- **Vitis 2024.1** or compatible version, including 
-- **Vitis HLS 2024.1**
-- **Vivado 2024.1** (for IP integration and bitstream export)
+- A Linux-based development environment (Ubuntu 20.04 or later recommended)
+- **Vitis 2025.2** or compatible version, Vitis HLS and Vivado
 - A supported Zynq board (e.g., Zybo Z7)
 
-
 In the exercises directory, you will find a few example projects, such as `iir`,
-which demonstrate the flow of HLS design, IP export, and application
-development. The flow can be run using the Vitis GUI, using the provided lab
-guide in labs/HWSW_Lab_Guide.pdf, or using the provided Makefile. For any of
-these steps, you must first set up the environment by sourcing the Vitis
+which demonstrate the harwdare/software flow.
+
+The flow can be run using the Vitis GUI, using the provided lab guide in
+labs/HWSW_Lab_Guide.pdf, or using the provided Makefile, which automates the
+Vitis flow, but not the Vivado block design creation, which must be done
+manually as described in the lab guide.
+
+For any of these flows, you must first set up the environment by sourcing the Vitis
 environment:
 
 ```bash
