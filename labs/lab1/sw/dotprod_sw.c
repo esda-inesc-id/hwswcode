@@ -5,7 +5,6 @@
 
 static int v1[VEC_SIZE];
 static int v2[VEC_SIZE];
-static int vdotp1;
 
 void init_vecs()
 {
@@ -27,22 +26,17 @@ void print_vec(int *x)
 	printf("\n");
 }
 
-void SW_dot_product()
-{
-	int i;
-	for (vdotp1=0, i=0; i<VEC_SIZE; i++) {
-		vdotp1 += v1[i]*v2[i];
-	}
-	printf("   sw dot product: %d\n", vdotp1);
-}
-
 int main()
 {
 	init_vecs();
 	print_vec(v1);
 	print_vec(v2);
 
-	SW_dot_product();
+    int vdotp1 = 0;
+	for (int i=0; i<VEC_SIZE; i++) {
+		vdotp1 += v1[i]*v2[i];
+	}
+	printf("   sw dot product: %d\n", vdotp1);
 
 	return 0;
 }

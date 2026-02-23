@@ -9,13 +9,23 @@
 PDIR ?= exercises/iir
 include $(PDIR)/init.mk
 
-XSA=$(PDIR)/project_1/design_1_wrapper.xsa
+PC_DIR  := $(if $(wildcard $(PDIR)/pc),$(PDIR)/pc,$(PDIR)/sw)
+PC_SRCS := $(wildcard $(PC_DIR)/*.c)
+
+SW_XSA  := design_1_wrapper.xsa
+SW_SRCS := $(wildcard $(PDIR)/sw/*.c)
+
 IPZIP=hls_project/solution1/impl/export.zip
 ELF=hwsw/Debug/hwsw.elf
 
-all: run
+all: run-hwsw
 
-#hls c simulation
+#desktop application (uses pc/ if present, otherwise sw/)
+pc_app: $(PC_SRCS)
+	gcc -o pc_app $^
+	./pc_app
+
+
 csim:
 	HLS_TOP=$(HLS_TOP) PART=$(PART) HLS_TB=$(HLS_TB) HLS_SRC=$(HLS_SRC) vitis-run --mode hls --tcl scripts/csim.tcl
 # Run csim in gdb with the following command:
@@ -40,7 +50,11 @@ $(IPZIP): hls_project/solution1/syn/report/csynth.rpt
 impl: hls_project/solution1/syn/report/csynth.rpt
 	HLS_TOP=$(HLS_TOP) PART=$(PART) HLS_SRC=$(HLS_SRC) vitis-run --mode hls --tcl scripts/impl.tcl
 
-#hwsw app 
+#sw-only embedded app (no IP, uses pre-built XSA at root)
+sw: $(SW_SRCS) $(SW_XSA)
+	make clean-sw && xsct scripts/hwsw.tcl $(SW_XSA) $(SW_SRCS)
+
+#hwsw embedded app (with IP)
 hwsw: $(ELF)
 
 $(ELF): $(APP_SRC) $(XSA)
@@ -50,7 +64,10 @@ $(ELF): $(APP_SRC) $(XSA)
 picocom:
 	picocom -b 115200 /dev/ttyUSB1 --imap lfcrlf
 
-run: $(ELF)
+run-sw: sw
+	xsct scripts/run.tcl $(DEBUG)
+
+run-hwsw: hwsw
 	xsct scripts/run.tcl $(DEBUG)
 
 $(XSA): $(IPZIP)
@@ -65,4 +82,4 @@ clean: clean-sw
 	@rm -rf hls_project $(PDIR)/hls/*.log $(PDIR)/hls/*.jou $(PDIR)/hls/solution* hls_project/solution1/syn/report/csynth.rpt hls_project/solution1/impl/export.zip $(PDIR)/project_1 ./app*
 	@rm -f docs/lab_guides/*.aux docs/lab_guides/*.log docs/lab_guides/*.lof docs/lab_guides/*.lot docs/lab_guides/*.toc docs/lab_guides/*.bbl docs/lab_guides/*.blg
 
-.PHONY: all csim csynth cosim ip impl run clean clean-sw picocom
+.PHONY: all csim csynth cosim ip impl hwsw run-hwsw sw run-sw clean clean-sw picocom pc_app

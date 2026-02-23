@@ -3,40 +3,52 @@
 #
 
 SHELL = bash
-DOC ?= presentation
 
-#build document
-build: $(DOC).pdf
+LAB_GUIDE  := lab_guide/hwsw_lab_guide
+SLIDES_PDFS := $(patsubst slides/%.tex,slides/%.pdf,$(wildcard slides/lect*.tex))
 
 #make figures
 figs:
 	make -C ./figs build
 
-#build presentation document type
-presentation.pdf: figs presentation.tex
-	pdflatex -jobname pres presentation.tex
-	pdflatex -jobname pres presentation.tex
+#build all documents
+all: slides lab_guide
 
-#build lab guide document
-lab_guide: lab_guide/hwsw_lab_guide.pdf
+#build all slides
+slides: figs $(SLIDES_PDFS)
 
-lab_guide/hwsw_lab_guide.pdf: lab_guide/hwsw_lab_guide.tex
-	cd lab_guide && pdflatex -interaction=nonstopmode hwsw_lab_guide.tex
-	cd lab_guide && bibtex hwsw_lab_guide
-	cd lab_guide && pdflatex -interaction=nonstopmode hwsw_lab_guide.tex
-	cd lab_guide && pdflatex -interaction=nonstopmode hwsw_lab_guide.tex
+slides/%.pdf: slides/%.tex
+	pdflatex -jobname $(@:.pdf=) $<
+	pdflatex -jobname $(@:.pdf=) $<
 
-#view document
-view: $(DOC).pdf
-	evince $< &
+#build single lecture: make lecture <N>  (e.g. make lecture 0 → lect0)
+N := $(word 2,$(MAKECMDGOALS))
+.PHONY: lecture
+lecture: figs slides/lect$(N).pdf
+
+ifneq ($(filter lecture,$(MAKECMDGOALS)),)
+$(N):
+	@:
+endif
+
+#build lab guide and view pdf
+lab_guide: $(LAB_GUIDE).pdf
+	evince $(LAB_GUIDE).pdf &
+
+$(LAB_GUIDE).pdf: $(LAB_GUIDE).tex
+	pdflatex -interaction=nonstopmode -output-directory lab_guide $(LAB_GUIDE).tex
+	BIBINPUTS=lab_guide: bibtex $(LAB_GUIDE)
+	pdflatex -interaction=nonstopmode -output-directory lab_guide $(LAB_GUIDE).tex
+	pdflatex -interaction=nonstopmode -output-directory lab_guide $(LAB_GUIDE).tex
 
 clean:
-	@find .  -maxdepth 1 -type f -not \( -name \*.pdf -o -name Makefile -o -name \*.mk -o -name $(DOC)\* \) -delete
-	@rm -rf $(PYTHON_DIR)/__pycache__ ../*.tex
-	@rm -f lab_guide/hwsw_lab_guide.aux lab_guide/hwsw_lab_guide.log lab_guide/hwsw_lab_guide.out lab_guide/hwsw_lab_guide.lof lab_guide/hwsw_lab_guide.toc lab_guide/hwsw_lab_guide.bbl lab_guide/hwsw_lab_guide.blg
+	@find . slides/ lab_guide/ -maxdepth 1 -type f \
+		-not \( -name \*.pdf -o -name \*.tex -o -name \*.bib -o -name Makefile -o -name \*.mk \) -delete
+	@rm -f slides/*-blx.bib
 
 veryclean: clean
-	make -C figures clean 
+	make -C figs clean
+	@rm slides/*.pdf lab_guide/*.pdf
 
-.PHONY: clean veryclean figs build view lab_guide
+.PHONY: all slides lab_guide figs clean veryclean lecture
 
