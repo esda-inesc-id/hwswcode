@@ -1,0 +1,43 @@
+\hypertarget{verify-the-design-in-hardware}{%
+\section{Verify the Design in
+Hardware}\label{verify-the-design-in-hardware}}
+
+\hypertarget{connect-the-board-and-establish-serial-communication-from-vitiss-terminal}{%
+\subsection{\texorpdfstring{Connect the board and establish
+serial communication from Vitis's Terminal
+}{Connect the board and establish serial communication from Vitis's Terminal }}\label{connect-the-board-and-establish-serial-communication-from-vitiss-terminal}}
+
+Connect and power up the FPGA board. You will use one cable to connect
+to the PROG/UART port of the board.
+
+\emph{\textbf{Warning: Do not press hard when connecting the cable, as
+the board connector is fragile.}}
+
+Open a terminal with
+
+\emph{\textbf{Vitis → Serial Monitor Terminal}}.
+
+Select the serial port and baud rate. After clicking
+\emph{\textbf{Run}}, the application will execute, and you will see the
+\emph{stdout} output in the Terminal console created before.
+
+Note that this \emph{dotprod\_0} application is software-only (only the
+processor system is used).
+
+\hypertarget{debug-your-software-using-the-application-debugger}{%
+\subsection{\texorpdfstring{Debug your software using the
+Application
+Debugger}{Debug your software using the Application Debugger}}\label{debug-your-software-using-the-application-debugger}}
+
+To execute the program in debugging mode, select \emph{Debug instead of
+Run.} The application will start and stop in the program's first
+instruction, and the IDE automatically changes to Debug view (you can
+change between Design and Debug view using the top-right buttons).
+
+Breakpoints can be set/unset by double-clicking on the blue bar on the
+left of the program window.\\
+The top taskbar's resume and step control buttons can control the
+program flow.\\
+The program variables and memory zones can be monitored on the
+right-side windows.
+

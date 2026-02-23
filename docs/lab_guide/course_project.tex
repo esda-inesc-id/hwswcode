@@ -1,0 +1,109 @@
+\hypertarget{course-project}{%
+\section{Course Project}\label{course-project}}
+
+\begin{itemize}
+\item
+  (CNN) Convolutional Neural Network classification of images.\\
+  \url{http://neuralnetworksanddeeplearning.com/chap6.html}~\\
+  \url{https://cs.stanford.edu/~acoates/stl10/}
+\end{itemize}
+
+\begin{quote}
+1\textsuperscript{st} part: 3×3 image convolution of images from the
+STL-10 images data set (88×88 RGB images).\\
+The elements of the convolution kernel will be 8-bit integers.
+
+2\textsuperscript{nd} part: classification of images from the STL-10
+images data set\\
+A baseline trained network will be provided (at the Support Material web
+page).\\
+The network weights provided will be single-precision floating-point.
+\end{quote}
+
+\hypertarget{data-inputoutput}{%
+\subsection{Data input/output}\label{data-inputoutput}}
+
+The projects will be demonstrated by initializing the external memory
+with the appropriate data input and calculating the results.
+
+The design performance will be evaluated by measuring the total
+processing time of the algorithm, starting from the first read of input
+data from the external memory and ending when all the resulting data is
+written back to the external memory.
+
+\hypertarget{project-schedule}{%
+\subsection{Project schedule}\label{project-schedule}}
+
+The project will be implemented in two phases.
+
+Lab 1: HW / SW co-processing architecture \textasciitilde{} 2 weeks
+(35\%)
+
+\begin{quote}
+Embedded uniprocessor with (simpler) hardware accelerator (using GP).\\
+Must demonstrate application functionality (simpler processing) and
+verification competencies (HLS IP co-simulation and, optionally,
+Integrated Logic Analysis), and evaluate performance.
+\end{quote}
+
+\begin{enumerate}
+\def\labelenumi{\roman{enumi}.}
+\item
+  \begin{quote}
+  Introductory application: implement and evaluate integer convolution
+  2D using the application and testbenches provided in the classes.
+  \end{quote}
+\item
+  \begin{quote}
+  Base application: Compute the 2D convolution for input images with
+  8-bit integer pixels.
+  \end{quote}
+
+  \begin{itemize}
+  \item
+    \begin{quote}
+    Milestone 1: Demonstrate a working software-only application.
+    \end{quote}
+  \item
+    \begin{quote}
+    Milestone 2: demonstrate HW/SW application using the axil\_conv2D IP
+    connected to the GP port, including:
+    \end{quote}
+
+    \begin{enumerate}
+    \def\labelenumii{\alph{enumii}.}
+    \item
+      HLS C/RTL co-simulation using simple testbench with 6×6 images and
+      3×3 kernel
+    \item
+      HLS C-simulation with the full application as a testbench, with
+      the 88×88 images and 3×3 kernels extended to simulate the use of
+      IP.
+    \item
+      HW/SW embedded application executing on the Zynq PS/PL system
+      (using the IP and one ARM processor).
+    \end{enumerate}
+  \end{itemize}
+\item
+  \begin{quote}
+  (Optional) Simple optimization of the HW/SW application (software
+  or/and hardware component) {[}2 val{]}
+  \end{quote}
+\item
+  \begin{quote}
+  (Optional) Integrated Logic Analysis {[}1 val{]}
+  \end{quote}
+\end{enumerate}
+
+Lab 2: Multiprocessor system in an FPGA \textasciitilde{} 3 weeks (50\%)
+
+\begin{itemize}
+\item
+  \begin{quote}
+  Embedded (heterogeneous) multiprocessor(s) with hardware
+  accelerator(s).\\
+  Must demonstrate functionality and show parallelization/hardware
+  acceleration.
+  \end{quote}
+\end{itemize}
+

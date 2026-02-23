@@ -1,0 +1,239 @@
+\hypertarget{design-an-axi-lite-ip-using-hls}{%
+\section{Design an AXI-Lite IP Using HLS}\label{design-an-axi-lite-ip-using-hls}}
+
+In this section, you will use the Xilinx Vitis High-Level Synthesis (HLS)
+tool to design a hardware accelerator and package it as an AXI-Lite IP
+block. The accelerator implements a multiply-accumulate (MAC) operation
+on two vectors, i.e., the dot product, which serves as a simple but
+representative kernel for hardware acceleration.
+
+AXI-Lite is a lightweight member of the AMBA AXI bus family. It provides
+a simple register-mapped interface between a processor and a hardware
+accelerator, making it straightforward to control the accelerator from
+software. In this lab, the Zynq Processing System (PS) will communicate
+with the dot-product accelerator through an AXI-Lite interface.
+
+Vitis HLS raises the abstraction level by allowing hardware to be
+described in C/C++. The tool synthesizes the C description into RTL
+(Register Transfer Level) HDL, estimates performance and resource
+utilization, and packages the result as a reusable IP block that can be
+instantiated in a Vivado block design.
+
+\hypertarget{create-a-new-component-in-vitis-targeting-your-device-or-board}{%
+\subsection{Create a New HLS Component}\label{create-a-new-component-in-vitis-targeting-your-device-or-board}}
+
+Follow the steps below to create a new HLS component targeting the FPGA
+on your board.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Launch Vitis from the desktop shortcut or from the shell. On the
+  welcome screen, select \textbf{HLS Development} $\rightarrow$
+  \textbf{Create Component} $\rightarrow$ \textbf{Create Empty HLS
+  Component}.
+\end{enumerate}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image1.png}
+  \caption{Vitis main window --- Create Empty HLS Component}
+\end{figure}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\item
+  Enter a component name (e.g., \texttt{axil\_macc}) and choose a
+  suitable location on the filesystem. Click \textbf{Next}.
+\end{enumerate}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image2.png}
+  \caption{Choose the component name and location}
+\end{figure}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\item
+  In the \textbf{Configuration File} tab, select \textbf{Empty File},
+  leave the default configuration filename unchanged, and click
+  \textbf{Next}.
+
+\item
+  In the \textbf{Source Files} tab, add the provided source files:
+  \begin{itemize}
+    \item Add \texttt{axil\_macc.cpp} as the \emph{design file} --- this
+      contains the C description of the dot-product hardware accelerator.
+    \item Add \texttt{tb\_axil\_macc.cpp} as the \emph{testbench file}
+      --- this contains the \texttt{main()} function used for C
+      simulation only and is \textbf{not} synthesized into hardware.
+  \end{itemize}
+  Click \textbf{Browse} to select \texttt{axil\_macc} as the
+  \emph{top-level function} (the function that will be synthesized into
+  hardware), then click \textbf{Next}.
+\end{enumerate}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image3.png}
+  \caption{Source Files tab --- adding design and testbench files and selecting the top function}
+\end{figure}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\item
+  In the \textbf{Hardware} tab, search for and select the FPGA part
+  corresponding to your board:
+  \begin{itemize}
+    \item \texttt{xc7z010clg400-1} --- for boards equipped with the
+      Zynq-7010 (e.g., the Zybo-Z7-10).
+    \item \texttt{xc7z020clg400-1} --- for boards equipped with the
+      Zynq-7020 (e.g., the Zybo-Z7-20 or PYNQ-Z1/Z2).
+  \end{itemize}
+  Click \textbf{Next}.
+\end{enumerate}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image4.png}
+  \caption{Hardware tab --- selecting the target FPGA part}
+\end{figure}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{5}
+\item
+  In the \textbf{Settings} tab, configure the HLS options as shown in
+  the figure below (clock period, flow target, etc.) and click
+  \textbf{Next}.
+\end{enumerate}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image5.png}
+  \caption{Settings tab --- HLS synthesis configuration}
+\end{figure}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{6}
+\item
+  In the \textbf{Summary} tab, review all your selections and click
+  \textbf{Finish} to create the component.
+\end{enumerate}
+
+\hypertarget{verify-the-functionality-of-the-c-based-hardware-specification}{%
+\subsection{Verify the C-Based Hardware Specification (C Simulation)}\label{verify-the-functionality-of-the-c-based-hardware-specification}}
+
+Before synthesizing the design into RTL, it is good practice to verify
+that the C description is functionally correct using \emph{C simulation}.
+This step compiles and runs the C code natively on the host machine,
+using the testbench to provide stimulus and check outputs. Because this
+simulation runs before any hardware generation, it executes very quickly
+and allows rapid debugging of algorithmic errors.
+
+Run \textbf{Flow $\rightarrow$ C Simulation $\rightarrow$ Run} with the
+default settings (no options selected). Inspect the console output and
+verify that the dot-product result produced by \texttt{axil\_macc}
+matches the reference result computed by the software checking function
+in the testbench. A \emph{PASS} message confirms functional correctness.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image6.png}
+  \caption{C simulation output --- dot-product IP result matches the software reference}
+\end{figure}
+
+\hypertarget{synthesize-the-design}{%
+\subsection{Synthesize the Design}\label{synthesize-the-design}}
+
+HLS synthesis translates the C description of \texttt{axil\_macc} into
+an RTL implementation. The tool schedules operations across clock cycles,
+allocates hardware resources (DSP blocks, BRAMs, LUTs, flip-flops), and
+inserts the AXI-Lite interface logic.
+
+Run \textbf{Flow $\rightarrow$ Synthesis $\rightarrow$ Run}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image7.png}
+  \caption{Running HLS synthesis}
+\end{figure}
+
+Once synthesis completes, carefully examine the synthesis report:
+\begin{itemize}
+  \item \textbf{Performance estimates} --- the estimated clock period
+    (which must meet the target constraint) and the initiation interval
+    and latency (in clock cycles) of the top-level function.
+  \item \textbf{Resource utilization estimates} --- the number of LUTs,
+    flip-flops, DSP blocks, and BRAMs consumed. Compare these figures
+    with the resources available on the target device.
+  \item \textbf{Interface summary} --- lists the ports and protocols
+    generated for the top function, including the AXI-Lite slave
+    interface and any additional control signals.
+\end{itemize}
+
+Also open the \textbf{Schedule Viewer} to understand how operations are
+mapped to clock cycles and identify any bottlenecks or pipeline stages.
+
+\emph{Note:} The \texttt{sync} folder (inside the \texttt{hls} directory
+in the Explorer pane) contains \texttt{report}, \texttt{verilog}, and
+\texttt{vhdl} sub-folders with the generated synthesis reports and RTL
+source files.
+
+\hypertarget{crtl-co-simulation}{%
+\subsection{C/RTL Co-Simulation}\label{crtl-co-simulation}}
+
+C/RTL co-simulation provides a post-synthesis functional verification of
+the generated RTL. The same testbench used in C simulation is reused to
+drive the RTL model, ensuring that the synthesized design is
+cycle-accurate and produces the same results as the original C
+description. This step is a \emph{non-exhaustive} verification --- it
+does not replace formal verification or timing simulation, but it
+catches common synthesis mismatches.
+
+Before running co-simulation, enable waveform dumping so that you can
+inspect signal transitions in Vivado:
+\begin{enumerate}
+  \item Open \texttt{HLS/axil\_macc/Settings/hls\_config.cfg}.
+  \item Locate the co-simulation settings and set
+    \texttt{trace\_level=all} and enable \texttt{wave\_debug}.
+\end{enumerate}
+
+Run \textbf{Flow $\rightarrow$ C/RTL Co-simulation}.
+
+After the run completes, open the generated waveform in the Vivado
+simulator. Identify the AXI-Lite read and write transactions on the
+interface signals, and verify that the simulation produces a \emph{PASS}
+result.
+
+\hypertarget{generate-the-ip-component}{%
+\subsection{Package the IP Component}\label{generate-the-ip-component}}
+
+Once the design has been verified through C simulation, synthesis, and
+co-simulation, it can be packaged as a reusable IP block for use in
+Vivado.
+
+Run \textbf{Package $\rightarrow$ Run} to export and package the
+synthesized hardware component into a standardized Xilinx IP format.
+
+When the packaging step completes, a new \texttt{hls/impl/ip} sub-folder
+appears in the Explorer pane. This folder contains all files that define
+the IP block, including:
+\begin{itemize}
+  \item The RTL source files (Verilog/VHDL).
+  \item The IP metadata file (\texttt{component.xml}), which describes
+    the interfaces, parameters, and bus definitions to Vivado.
+  \item The \textbf{drivers} sub-folder, which contains automatically
+    generated bare-metal C driver files. These drivers provide
+    high-level functions to initialize the IP, start a transaction, and
+    read results from software running on the Zynq PS.
+\end{itemize}
+
+The IP is now ready to be added to a Vivado repository and instantiated
+in the Zynq block design, as described in the next section.
+

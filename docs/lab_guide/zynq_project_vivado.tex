@@ -1,0 +1,328 @@
+\hypertarget{zynq-project-in-vivado}{%
+\section{Zynq Project in Vivado}\label{zynq-project-in-vivado}}
+
+Start the Vivado application from the desktop shortcut or command line
+without closing Vitis.
+
+\hypertarget{create-a-new-project-targeting-the-fpga-board}{%
+\subsection{Create a New Project targeting the FPGA
+board}\label{create-a-new-project-targeting-the-fpga-board}}
+
+\hypertarget{open-vivado}{%
+\subsubsection{Open Vivado}\label{open-vivado}}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image8.png}
+  \caption{Open Vivado — without closing Vitis}
+\end{figure}
+
+\hypertarget{create-a-new-project}{%
+\subsubsection{\texorpdfstring{Create a New Project
+}{Create a New Project }}\label{create-a-new-project}}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image9.png}
+  \caption{Open Vivado — Create a New Project}
+\end{figure}
+
+\hypertarget{name-the-project}{%
+\subsubsection{\texorpdfstring{Name the project
+}{Name the project }}\label{name-the-project}}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image10.png}
+  \caption{Open Vivado — Name the project}
+\end{figure}
+
+Note: Avoid using spaces and/or special characters in your directory
+path and in the filenames.
+
+\hypertarget{select-project-type}{%
+\subsubsection{Select project type}\label{select-project-type}}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image11.png}
+  \caption{Select project type — path and in the filenames}
+\end{figure}
+
+\hypertarget{skip-add-sources-and-constraints}{%
+\subsubsection{Skip Add Sources and
+Constraints}\label{skip-add-sources-and-constraints}}
+
+Click Next twice to skip Add Source and Add Constraints.
+
+\hypertarget{board-selection}{%
+\subsubsection{Board Selection}\label{board-selection}}
+
+In the Default Part form, select Boards and then choose the board you
+are using: Zybo, Zybo Z7-10 or Pynq-Z2 (check the version of your
+board).
+
+Note: if the board is not in the board list, go to Tools/Vivado Store to
+install it.
+
+Click Next, check the Project Summary and click Finish to create an
+empty Vivado project.
+
+\hypertarget{use-ip-integrator-to-create-a-new-block-design-with-the-zynq-processing-system}{%
+\subsection{Use IP Integrator to create a new Block Design, with the
+ZYNQ processing
+system}\label{use-ip-integrator-to-create-a-new-block-design-with-the-zynq-processing-system}}
+
+\hypertarget{create-a-block-design}{%
+\subsubsection{Create a Block Design}\label{create-a-block-design}}
+
+In the Flow Navigator, click Create Block Design (under IP Integrator)
+with the design name \textbf{design\_1}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image12.png}\includegraphics[width=\linewidth,keepaspectratio]{./media/image13.png}
+  \caption{Create a Block Design — with the design name design\_1}
+\end{figure}
+
+\hypertarget{add-the-processing-system}{%
+\subsubsection{Add the Processing
+System}\label{add-the-processing-system}}
+
+IP components can be added from the catalog by clicking the Add IP icon
+(\textbf{+}) in the block diagram, or by right-clicking anywhere in the
+Diagram workspace and selecting Add IP. Select the Zynq7 Processing
+System and add it to the design.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image14.png}
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image15.png}
+  \caption{Create a Block Design — System and add it to the design}
+\end{figure}
+
+Click on Run Block Automation with the default settings by pressing OK.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image16.png}
+  \caption{Create a Block Design — Click on Run Block Automation with the default settings by pressing OK}
+\end{figure}
+
+Ports are automatically added for the DDR and Fixed IO. An imported
+configuration for the Zynq PS system related to the Zybo board has been
+applied, which can be customized.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image17.png}
+  \caption{Create a Block Design — applied, which can be customized}
+\end{figure}
+
+\hypertarget{configure-the-processing-block-with-only-one-uart-peripheral}{%
+\subsubsection{Configure the processing block with only one UART
+peripheral}\label{configure-the-processing-block-with-only-one-uart-peripheral}}
+
+Double-click on the PS block to open its customization window.
+
+Open the MIO configuration form and ensure \textbf{all the I/O are
+deselected except UART 1}, i.e., ENET 0, USB 0, SD 0 (I/O Peripherals),
+GPIO MIO (GPIO), Quad SPI Flash (Memory Interfaces), and Timer 0
+(Application Processor Unit) must be deselected.
+
+\hypertarget{ps-pl-configuration}{%
+\subsubsection{PS-PL Configuration}\label{ps-pl-configuration}}
+
+On the PS-PL Configuration window, keep the M AXI GP0 interface (AXI Non
+Secure Enablement → GP Master AXI interface) and the FCLK\_RESET0\_N
+option (General → Enable Clock Resets) selected.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image20.png}
+  \caption{PS-PL Configuration — option (General → Enable Clock Resets) selected}
+\end{figure}
+
+Figure : PS-PL Configuration.
+
+\hypertarget{clock-configuration}{%
+\subsubsection{Clock Configuration}\label{clock-configuration}}
+
+On the Clock Configuration window PL Fabric Clocks, keep the clock
+configuration with the FCLK\_CLK0 clock enabled, and select a requested
+frequency of 100 MHz.
+
+\textbf{Do not change the Input Frequency}, which is 50 MHz on the Pynq
+board and 33.(3) MHz on the Zybo-Z7-10 boards.
+
+\hypertarget{finalize-the-ps-configuration}{%
+\subsubsection{Finalize the PS
+Configuration}\label{finalize-the-ps-configuration}}
+
+Apply the customization and note that the Zynq PS block includes the
+GP0, clock, and reset ports:
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image21.png}
+  \caption{Clock Configuration — GP0, clock, and reset ports:}
+\end{figure}
+
+\hypertarget{specify-ip-repository}{%
+\subsection{Specify IP Repository}\label{specify-ip-repository}}
+
+Add your IP repository folder to the IP repository list in the
+\emph{\textbf{Project Settings}}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image22.png}
+  \caption{Specify IP Repository — Add your IP repository folder to the IP repository list in the}
+\end{figure}
+
+\hypertarget{add-your-ip-to-the-zynq-design}{%
+\subsection{Add your IP to the Zynq
+design}\label{add-your-ip-to-the-zynq-design}}
+
+\hypertarget{add-new-axi-lite-ip}{%
+\subsubsection{Add New AXI-Lite IP}\label{add-new-axi-lite-ip}}
+
+Click the \emph{\textbf{Add IP icon}}, search for your new IP and add it
+to the design.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image23.png}
+  \caption{Add New AXI-Lite IP — to the design}
+\end{figure}
+
+\hypertarget{connect-the-blocks}{%
+\subsubsection{Connect the blocks}\label{connect-the-blocks}}
+
+Complete the design by automatically connecting the PS and PL blocks:
+run \emph{\textbf{Connection Automation}} (and select
+/axil\_macc\_0/s\_axi\_BUS1) to automatically make the required
+connections:
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image24.png}
+  \caption{Connect the blocks — connections:}
+\end{figure}
+
+Note that two additional blocks, Processor System Reset and AXI
+Interconnect, have been automatically added to the design.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image25.png}
+  \caption{Connect the blocks — Interconnect, have been automatically added to the design}
+\end{figure}
+
+\includegraphics[width=0.25197in,height=0.25197in]{./media/image26.png}Regenerate
+the layout .
+
+Validate the design
+\includegraphics[width=0.17708in,height=0.18264in]{./media/image27.png}.
+
+\emph{Note: if a warning message appears on
+``PCW\_UIPARAM\_DDR\_DQS\_TO\_CLK\_DELAY\_0 has negative value'', you
+may ignore it.}
+
+Check the Address Editor tab and check which address region has been
+assigned to the axil\_macc\_0 s\_axi\_BUS\_A Registers.\\
+Note: \emph{\textbf{Do not change}} the mapping addresses generated by
+Vivado.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image28.png}
+  \caption{Connect the blocks — Note: the mapping addresses generated by}
+\end{figure}
+
+\hypertarget{system-hardware-generation}{%
+\subsection{System Hardware
+Generation}\label{system-hardware-generation}}
+
+\hypertarget{generate-block-design}{%
+\subsubsection{\texorpdfstring{Generate Block Design
+}{Generate Block Design }}\label{generate-block-design}}
+
+\includegraphics[width=2.16142in,height=2.81102in]{./media/image29.png}Click
+on Generate Block Design (on the Flow Navigator) to generate the
+Implementation, Simulation and Synthesis files for the design.
+
+\hypertarget{create-hdl-wrapper}{%
+\subsubsection{Create HDL Wrapper}\label{create-hdl-wrapper}}
+
+\hypertarget{in-the-sources-panel-right-click-on-design_1.bd-and-select-create-hdl-wrapper-to-generate-the-top-level-vhdl-model.-leave-the-let-vivado-manager-wrapper-and-auto-update-option-selected.}{%
+\subsubsection{\texorpdfstring{In the Sources panel, right-click on
+\emph{design\_1.bd} and select Create HDL Wrapper to generate the
+top-level VHDL model. Leave the ``\emph{Let Vivado manager wrapper and
+auto-update}'' option
+selected.}{In the Sources panel, right-click on design\_1.bd and select Create HDL Wrapper to generate the top-level VHDL model. Leave the ``Let Vivado manager wrapper and auto-update'' option selected.}}\label{in-the-sources-panel-right-click-on-design_1.bd-and-select-create-hdl-wrapper-to-generate-the-top-level-vhdl-model.-leave-the-let-vivado-manager-wrapper-and-auto-update-option-selected.}}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image31.png}
+  \caption{Create HDL Wrapper — right-click design\_1.bd and select Create HDL Wrapper}
+\end{figure}
+
+The \emph{design\_1\_wrapper.vhd} file is created, added to the project,
+and set as the top module in the design. (Double-click on the file name
+to see the content in the Auxiliary pane.)
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image32.png}
+  \caption{Create HDL Wrapper — to see the content in the Auxiliary pane.)}
+\end{figure}
+
+\hypertarget{design-implementation}{%
+\subsubsection{Design Implementation}\label{design-implementation}}
+
+Synthesize the design (\emph{\textbf{Run Synthesis}}), implement it
+(\emph{\textbf{Run Implementation}}), and generate the bitstream
+(\emph{\textbf{Generate Bitstream}}).
+
+The hardware system has been generated and can now be exported to the
+Vitis IDE to develop the embedded software and verify the application on
+the development board.
+
+After implementation, you may check the Vivado reports, namely the
+\emph{Utilization Report} and the \emph{Timing Summary Report}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image33.png}
+  \caption{Design Implementation — Utilization Report and the Timing Summary Report}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image34.png}
+  \caption{Design Implementation — Utilization Report and the Timing Summary Report}
+\end{figure}
+
+\hypertarget{export-hardware-to-the-vitis-software-platform}{%
+\subsubsection{Export Hardware to the Vitis Software
+Platform}\label{export-hardware-to-the-vitis-software-platform}}
+
+In Vivado, click \emph{\textbf{File → Export → Export Hardware}}.
+
+This design has hardware in the Programmable Logic (PL), therefore, you
+must include the bitstream to be generated and included. Make sure that
+the export path corresponds to your project folder.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image35.png}
+  \caption{Design Implementation — the export path corresponds to your project folder}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image36.png}
+  \caption{Design Implementation — the export path corresponds to your project folder}
+\end{figure}
+

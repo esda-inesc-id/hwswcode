@@ -1,0 +1,126 @@
+\hypertarget{software-application}{%
+\section{Software Application}\label{software-application}}
+
+Now return to the Vitis application you left open before.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Click \emph{\textbf{Embedded Development → Create Platform Component
+  to create a new platform project from the Xilinx Shell Archive (XSA)
+  previously created in}} Vivado. Enter the platform component name and
+  choose a suitable location. Click Next.
+\end{enumerate}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image37.png}
+  \caption{Software Application — choose a suitable location. Click Next}
+\end{figure}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\item
+  Browse to the hardware specification file
+  (\emph{design\_1\_wrapper.xsa) and select it. Click Next.}
+\end{enumerate}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image38.png}
+  \caption{Software Application — (design\_1\_wrapper.xsa) and select it. Click Next}
+\end{figure}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\item
+  The \emph{Software Specification} fields (Operating system and
+  Processor) are updated to \emph{standalone} and
+  \emph{ps7\_cortexa9\_0,} respectively. Click Next, review the settings
+  in the next screen and click Finish.
+\item
+  Build the platform project by clicking Flow/\emph{Build.}
+\end{enumerate}
+
+After the project builds, you can now start developing your software
+application.
+
+\hypertarget{create-your-c-project}{%
+\subsection{Create your C Project}\label{create-your-c-project}}
+
+In this example, you will use a previously coded C program
+``\emph{dotprod\_v0.c}'' that multiplies two vectors (software-only).
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Create a new C project by clicking \emph{\textbf{File → New Component
+  → Application Project}}. Choose a name and a suitable location for
+  your software component, and click Next. Target the existing hardware
+  platform you have previously created, and click Next. Leave the
+  default Domain, click Next. Review and click Finish. The C project
+  will be created and shown in the Vitis Project Components window.
+\item
+  Now you can import C source files, using the C code provided as in
+  this example. To import a new C source file, select the \emph{src}
+  folder in the Components view, right-click, and select
+  \emph{\textbf{Import-\textgreater Files..}}. Browse and import file
+  \emph{dotprod\_v0.c}.
+\end{enumerate}
+
+You can set the GCC compiler settings, including the optimization level,
+by selecting Settings (below your application) and clicking the
+\emph{UserConfig.cmake} item\emph{. For now, leave them as default,
+namely the Optimization Level set to None (-O0).}
+
+You can also view the Linker Script by double-clicking on
+\emph{Sources/src/lscript.ld}. Here you can define where your code's
+data and instruction sections will be stored. Place all the sections of
+your program on the OCM and leave the heap and stack sizes as 1K and 10K
+bytes, respectively.
+
+Note: if you use the printf() function extensively, you may need to
+increase the heap size (e.g., to heap size = 10kB)
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\item
+  \emph{Build} the project to generate \emph{the} executable file. The
+  linker combines the compiled applications, including libraries and
+  drivers, and produces an executable file, in Executable Linked Format
+  (ELF), that is ready to execute on your processor hardware platform.
+\end{enumerate}
+
+Opening the \emph{\textbf{.elf}} (see Components/Output), you can see
+the instructions generated for your C code, including their instruction
+memory addresses. At the top, you can view a list of the sizes and
+starting addresses of the various sections of the program, where
+\emph{\textbf{size}} indicates the size of each section and
+\emph{\textbf{LMA}} is the Loadable Memory Address (start address for
+each section). Note that, in this case, all sections reside in the OCM
+memory space (starting with base address 0x00000000).
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image39.png}
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image40.png}
+  \caption{Create your C Project — memory space (starting with base address 0x00000000)}
+\end{figure}
+
+You can check the size occupied by your program by opening the file
+\emph{\textbf{dotprod0.elf.size}}. In this example it occupies about 70
+kB.
+
+text data bss dec hex filename
+
+51111 2548 17600 71259 1165b dotprod\_0.elf
+
+Note: your program must fit in with the memory you select to store it
+in!\\
+Also, you must avoid trying to store multiple programs and/or data in
+the same memory zones.\\
+\textbf{All the memory management is done by the designer, you!}
+

@@ -1,0 +1,47 @@
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+This lab guide supports the Hardware/Software Co-Design course at
+Instituto Superior T\'{e}cnico. It covers three laboratory assignments
+that progressively build a complete embedded HW/SW system on a
+Xilinx Zynq-7000 SoC development board.
+
+\begin{description}
+  \item[Lab 0] A short tutorial on the Xilinx Vitis and Vivado design
+    tools and the development board. Students become familiar with the
+    HLS and FPGA design flows before tackling the main project.
+  \item[Lab 1] A HW/SW co-processing architecture based on a
+    uniprocessor Zynq system with a hardware accelerator designed using
+    HLS. The accelerator is connected to the ARM processor via an
+    AXI-Lite interface. The target application is a 2D image convolution
+    kernel, representative of the convolutional layers used in neural
+    networks~\cite{zynqbook}.
+  \item[Lab 2] An embedded heterogeneous multiprocessor system on the
+    Zynq PL fabric, with one or more hardware accelerators. Students
+    must demonstrate parallelization and measure the resulting speedup.
+\end{description}
+
+The course project~(Section~\ref{course-project}) targets Convolutional
+Neural Network (CNN) image classification using the STL-10 dataset.
+Students implement and optimize a 2D convolution engine as an HLS-based
+AXI-Lite IP, integrate it into a Zynq block design in Vivado, develop
+the bare-metal software application in Vitis, and measure execution time
+to evaluate their hardware acceleration.
+
+This guide walks through each step of the design flow:
+designing the AXI-Lite IP with Vitis HLS~(Section~\ref{design-an-axi-lite-ip-using-hls}),
+building the Zynq block design in Vivado~(Section~\ref{zynq-project-in-vivado}),
+writing and running the software application~(Section~\ref{software-application}),
+verifying the design on hardware~(Section~\ref{verify-the-design-in-hardware}),
+loading data from a binary file into memory~(Section~\ref{memory-initialization-from-a-binary-file}),
+and measuring execution time~(Section~\ref{measure-the-execution-time-of-your-application}).
+
+Recommended supporting material for this course is listed in the
+References section~\cite{slides,ug998,ug1399,zynqbook,labfiles}.
+
+\emph{Note: some screenshots in this guide may differ slightly from what
+you see on screen due to tool updates. Please consult the course website
+for the latest version of this guide and the associated project files.
+Xilinx/AMD tools can occasionally be unstable; do not hesitate to ask
+for help.}
+

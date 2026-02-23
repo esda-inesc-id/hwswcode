@@ -1,0 +1,41 @@
+\hypertarget{memory-initialization-from-a-binary-file}{%
+\section{Memory Initialization from a Binary
+File}\label{memory-initialization-from-a-binary-file}}
+
+You can debug your applications by initializing part of your system's
+memory using data from a binary file in your computer. This basic
+procedure will be used in your future projects to demonstrate your
+designs. Edit the file ps7\_init.tcl as in the figure, where images.bin
+is the binary file, the first number is the memory address, and the last
+number is the file size.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,keepaspectratio]{./media/image41.png}
+  \caption{Memory Initialization — editing ps7\_init.tcl with binary file, memory address and file size}
+\end{figure}
+
+You must select the memory address zone so that it corresponds to a
+valid data memory zone in your system and is free to store your data.
+Choose a free memory zone in your system to store your data. This zone
+must be adequate for the required storage and not interfere with the
+memory zones used for other storage, namely for the program code and
+data. \textbf{Remember that you do the memory management.}
+
+In the figure example, the base address selected, 0x10000000, defines a
+memory area to be used in the external memory (DDR).
+
+Then and for example, you can set the base address for your vector's
+storage in your C program, and use it to set constant pointers to
+address the vectors:
+
+\begin{quote}
+\textbf{\#define} VEC1\_START\_ADD 0x10000000
+
+\textbf{\#define} VEC2\_START\_ADD (VEC1\_START\_ADD+4*VEC\_SIZE)
+
+\textbf{int} *v1 = (\textbf{int} *)(VEC1\_START\_ADD);
+
+\textbf{int} *v2 = (\textbf{int} *)(VEC2\_START\_ADD);
+\end{quote}
+

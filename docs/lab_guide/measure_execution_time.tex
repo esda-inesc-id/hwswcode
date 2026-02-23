@@ -1,0 +1,51 @@
+\hypertarget{measure-the-execution-time-of-your-application}{%
+\section{Measure the execution time of your
+application}\label{measure-the-execution-time-of-your-application}}
+
+You can use the time-specific function \emph{\textbf{XTime\_GetTime
+(XTime *xtime)}} (available in the standalone BSP) to evaluate the
+execution time of your application. This function provides direct access
+to the\\
+64-bit Global Counter in the PMU. This global timer (GT) is a 64-bit
+incrementing counter with an auto-incrementing feature accessible to
+both Cortex-A9 processors. The global timer is consistently clocked at
+1/2 of the CPU frequency (the counter increments every two processor
+cycles). The pre-defined value COUNTS\_PER\_SECOND directly indicates
+the GC clock frequency (number of counts per second).
+
+\begin{quote}
+\textbf{\#include \textless stdio.h\textgreater{}}
+
+\textbf{\#include "xiltimer.h"}
+
+\textbf{int main()}
+
+\textbf{\{}
+
+\textbf{XTime tStart, tEnd;}
+
+\textbf{// initialize the application}
+
+\textbf{XTime\_GetTime(\&tStart); // start measuring time}
+
+\textbf{// process the application}
+
+\textbf{XTime\_GetTime(\&tEnd); // end measuring time}
+
+\textbf{// finalize the application}
+
+\textbf{printf("Execution took \%llu clock cycles.\textbackslash n",\\
+2*(tEnd - tStart));}
+
+\textbf{printf("Output took \%.2f us.\textbackslash n",}
+
+\textbf{1.0*(tEnd - tStart) * 1000000/(COUNTS\_PER\_SECOND));}
+
+\textbf{return 0;}
+
+\textbf{\}}
+
+Note: when measuring the performance of (parts of) your application, be
+careful not to measure the time of the printfs!
+\end{quote}
+
