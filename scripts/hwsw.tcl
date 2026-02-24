@@ -1,7 +1,8 @@
 #build the hwsw platform application using the provided xsa and source files
 
-set xsa [lindex $argv 0]
-set srcs [lrange $argv 1 end]
+set appname [lindex $argv 0]
+set xsa [lindex $argv 1]
+set srcs [lrange $argv 2 end]
 
 setws .
 
@@ -10,16 +11,16 @@ domain create -name standalone_domain -os standalone -proc ps7_cortexa9_0
 platform generate
 platform active platform
 
-app create -name hwsw -domain standalone_domain
-app config -name hwsw -add libraries {m}
-app config -name hwsw -set compiler-optimization {Optimize more (-O2)}
+app create -name $appname -domain standalone_domain
+app config -name $appname -add libraries {m}
+app config -name $appname -set compiler-optimization {Optimize more (-O2)}
 
 
-#copy source files to hwsw/src
+#copy source files to $appname/src
 foreach src $srcs {
-    file copy -force $src hwsw/src
+    file copy -force $src $appname/src
 }
 
-file delete -force hwsw/src/helloworld.c
+file delete -force $appname/src/helloworld.c
 
-app build -name hwsw
+app build -name $appname
