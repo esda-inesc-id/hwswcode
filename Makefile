@@ -7,20 +7,30 @@
 # The app target will create the application and run it on the hardware
 
 PDIR ?= exercises/iir
+#PDIR ?= labs/lab1
 include $(PDIR)/init.mk
 
 PC_DIR  := $(if $(wildcard $(PDIR)/pc),$(PDIR)/pc,$(PDIR)/sw)
 PC_SRCS := $(wildcard $(PC_DIR)/*.c)
 
 SW_XSA  := design_1_wrapper.xsa
-HWSW_XSA  := $(PDIR)/project_1/$(HWSW_XSA)
-XSA	 := $(if $(wildcard $(HWSW_XSA)), $(HWSW_XSA), $(SW_XSA))
+HWSW_XSA  := $(PDIR)/project_1/design_1_wrapper.xsa
 
-SW_SRCS := $(wildcard $(PDIR)/sw/*.c)
+SW_SRCS   := $(wildcard $(PDIR)/sw/lscript.ld $(PDIR)/sw/*.c)
+HWSW_SRCS := $(wildcard $(PDIR)/hwsw/lscript.ld $(PDIR)/hwsw/*.c)
+
+ifeq ($(APP),hwsw)
+	SRCS := $(HWSW_SRCS)
+	XSA  := $(HWSW_XSA)
+else
+	SRCS := $(SW_SRCS)
+	XSA  := $(SW_XSA)
+endif
 
 IPZIP=hls_project/solution1/impl/export.zip
-SW_ELF  =sw/Debug/sw.elf
-HWSW_ELF=hwsw/Debug/hwsw.elf
+ELF  = app/Debug/app.elf
+
+USB ?= 2
 
 all: run-hwsw
 
@@ -50,42 +60,45 @@ ip: $(IPZIP)
 $(IPZIP): hls_project/solution1/syn/report/csynth.rpt
 	HLS_TOP=$(HLS_TOP) PART=$(PART) HLS_SRC=$(HLS_SRC) vitis-run --mode hls --tcl scripts/ip.tcl
 
-#hls c implementation
+#hls ip implementation
 impl: hls_project/solution1/syn/report/csynth.rpt
 	HLS_TOP=$(HLS_TOP) PART=$(PART) HLS_SRC=$(HLS_SRC) vitis-run --mode hls --tcl scripts/impl.tcl
 
+#vivado export xsa
+hwsw_xsa: $(HWSW_XSA)
+$(HWSW_XSA): $(IPZIP)
+	PDIR=$(PDIR) PART=$(PART) vivado -mode batch -source scripts/hwsw_xsa.tcl
+
 #sw-only embedded app (no IP, uses pre-built XSA at root)
-sw: $(SW_ELF)
+elf: $(ELF)
+$(ELF): $(SRCS) $(XSA)
+	xsct scripts/app.tcl $(XSA) $(SRCS)
 
-$(SW_ELF): $(SW_SRCS) $(SW_XSA)
-	xsct scripts/hwsw.tcl sw $(SW_XSA) $(SW_SRCS)
-
-#hwsw embedded app (with IP)
-hwsw: $(HWSW_ELF)
-
-$(HWSW_ELF): $(APP_SRC) $(XSA)
-	make clean-sw && xsct scripts/hwsw.tcl hwsw $(XSA) $(APP_SRC)
+ld-hw: $(XSA) $(ELF)
+	xsct scripts/ld_hw.tcl
 
 #open picocom in another terminal to see the output:
 picocom:
-	picocom -b 115200 /dev/ttyUSB1 --imap lfcrlf
+	picocom -b 115200 /dev/ttyUSB$(USB) --imap lfcrlf
 
-run-sw: $(SW_ELF)
-	xsct scripts/run.tcl sw $(DEBUG)
-
-run-hwsw: $(HWSW_ELF)
-	xsct scripts/run.tcl hwsw $(DEBUG)
-
-$(HWSW_XSA): $(IPZIP)
-	PDIR=$(PDIR) PART=$(PART) vivado -mode batch -source scripts/uphw.tcl && \
-	xsct scripts/ldhw.tcl $(PDIR)
+run: ld-hw
+	sleep 2 && xsct scripts/run.tcl $(DEBUG)
 
 clean-sw:
-	@rm -rf platform hwsw sw sw_system *.log *.jou logs hwsw_* .analytics .metadata .Xil
+	@rm -rf platform app app_system *.log *.jou logs .analytics .metadata .Xil
 	@find . -name \*~ -delete
 
 clean: clean-sw
 	@rm -rf hls_project $(PDIR)/hls/*.log $(PDIR)/hls/*.jou $(PDIR)/hls/solution* hls_project/solution1/syn/report/csynth.rpt hls_project/solution1/impl/export.zip $(PDIR)/project_1 ./app*
 	@rm -f docs/lab_guides/*.aux docs/lab_guides/*.log docs/lab_guides/*.lof docs/lab_guides/*.lot docs/lab_guides/*.toc docs/lab_guides/*.bbl docs/lab_guides/*.blg
 
-.PHONY: all csim csynth cosim ip impl hwsw run-hwsw run-sw clean clean-sw picocom pc_app
+board-power-off:
+	sudo uhubctl -l 1-13 -p 3 -a off
+
+board-power-on:
+	sudo uhubctl -l 1-13 -p 3 -a on
+
+board-power-cycle:
+	sudo uhubctl -l 1-13 -p 3 -a cycle
+
+.PHONY: all csim csynth cosim impl run clean clean-sw picocom pc_app ld-hw board-power-off board-power-on board-power-cycle
