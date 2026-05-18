@@ -219,7 +219,7 @@
 \vspace{0.04cm}
 \begin{columns}[T,totalwidth=\textwidth]
   \column{0.50\textwidth}
-  \vspace{0.02cm}
+  \vspace{1.02cm}
   \begin{tikzpicture}[scale=0.70]
     \draw[<->, thick, Navy] (-0.3,0) -- (8.8,0);
     \foreach \x in {0,0.5,...,7.5}
@@ -236,7 +236,7 @@
     \draw[decorate,
           decoration={brace, amplitude=4pt, raise=0.35cm},
           thick, Teal]
-      (0.25,0) -- (7.75,0)
+      (0.25,1.43) -- (7.75,1.43)
       node[midway, above=0.45cm, font=\scriptsize\color{Teal}]
         {Range $= 2^{I} = 4$};
     \node[rounded corners=3pt, fill=Navy!12, font=\scriptsize\color{Navy},
@@ -380,7 +380,7 @@ ap_fixed<8,4, AP_RND, AP_SAT>  s;  s = 7.9f;  // clamps to 7.875
 \textbf{Param} & \textbf{Common values} & \textbf{Meaning}\\
 W & 8, 12, 16, 24 & Total word width in bits\\
 I & 1, 2, 4, \ldots & Integer bits (including sign); sets range\\
-Q & AP\_TRN, AP\_RND & What to do when dropping LSBs\\
+Q & AP\_TRN, AP\_RND, AP\_RND\_CONV & What to do when dropping LSBs (conv.\ = banker's rounding)\\
 O & AP\_WRAP, AP\_SAT & What to do when value exceeds range\\
 \end{tabular}}}
 \vspace{0.02cm}
@@ -569,13 +569,13 @@ int I = (int)ceilf(log2f(max_abs)) + 2;
   \column{0.46\textwidth}
   {\color{Navy}\bfseries Signal representations derived from \texttt{IIN}:}
   \vspace{2pt}
-  {\setlength{\extrarowheight}{1pt}
-  \begin{tabular}{ll}
+  {\scriptsize\setlength{\extrarowheight}{1pt}
+  \begin{tabular}{lp{3.2cm}}
   \rowcolor{Navy!15}
   \textbf{Signal} & \textbf{Format}\\
-  Input / coeff  & \texttt{ap\_fixed<WIN, IIN>}\\
-  Product        & \texttt{ap\_fixed<2*WIN, 2*IIN>}\\
-  Accumulator    & \texttt{ap\_fixed<2*WIN+G, 2*IIN+G>}\\
+  Input / coeff  & \texttt{ap\_fixed<WIN,IIN>}\\
+  Product        & \texttt{ap\_fixed<2*WIN,2*IIN>}\\
+  Accumulator    & \texttt{ap\_fixed<2*WIN+G,2*IIN+G>}\\
   \end{tabular}}
   \vspace{0.07cm}
   {\small\color{NavyDk}
@@ -856,14 +856,14 @@ printf("%s\n",
 #include <math.h>
 #define N 256
 typedef ap_fixed<16,2, AP_RND, AP_SAT> fx_t;
-float compute_float(float x[], int n); // float reference
-fx_t  compute_fixed(fx_t  x[], int n);// ap_fixed DUT
+float compute_float(float x); // float reference
+fx_t  compute_fixed(fx_t  x);// ap_fixed DUT
 int main() {
     float x_f[N];  fx_t x_fx[N];
     double err_sq = 0, sig_sq = 0;
     for (int n = 0; n < N; n++) {
-        float ref = compute_float(x_f,  n);
-        float dut = (float)compute_fixed(x_fx, n);
+        float ref = compute_float(x_f[n]);
+        float dut = (float)compute_fixed(x_fx[n]);
         err_sq += (ref-dut)*(ref-dut);
         sig_sq += ref*ref;
     }
@@ -874,7 +874,37 @@ int main() {
 \end{lstlisting}
 \end{frame}
 
-%% SLIDE 21
+%% SLIDE 21 -- Scale-and-Round sweep (inserted)
+\begin{frame}[fragile]{Scale-and-Round: Sweeping $W$ Without Recompilation}
+\vspace{0.02cm}
+Quantise in pure C by multiplying by $S = 2^N$, rounding, then dividing back:
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize,aboveskip=4pt,belowskip=4pt]
+float quantize(float x, float S) {
+    return roundf(x * S) / S;
+}
+\end{lstlisting}
+Sweep all scale factors in one run --- no recompilation needed:
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize,aboveskip=4pt,belowskip=4pt]
+for (int N = 4; N <= 20; N++) {
+    float S = powf(2.0f, (float)N);
+    double err_sq = 0, sig_sq = 0;
+    for (int i = 0; i < LEN; i++) {
+        float q = quantize(ref[i], S);
+        err_sq += (ref[i]-q)*(ref[i]-q);
+        sig_sq += ref[i]*ref[i];
+    }
+    float snr = 10.0f*log10f((float)(sig_sq/err_sq));
+    printf("N=%2d  SNR=%5.1f dB\n", N, snr);
+}
+\end{lstlisting}
+\begin{enumerate}
+  \item No \texttt{ap\_fixed} type needed --- works with any float reference
+  \item One executable sweeps all $N$ values in seconds
+  \item Pick the smallest $N$ whose SNR meets your target, then set \texttt{ap\_fixed<W,I>} accordingly
+\end{enumerate}
+\end{frame}
+
+%% SLIDE 22
 \begin{frame}{C-Simulation vs.\ Co-Simulation}
 \vspace{0.04cm}
 {\setlength{\extrarowheight}{2pt}
@@ -1157,30 +1187,12 @@ SNR             & 149\,dB   & \textbf{68\,dB} \quad(meets 60\,dB target)\\
 
 %% SLIDE 29
 \begin{frame}{L7 Key Takeaways}
-\vspace{0.04cm}
-\begin{tikzpicture}[
-  kbox/.style={rounded corners=4pt, minimum width=6.5cm, minimum height=1.1cm,
-               align=left, font=\small, text=white, inner sep=8pt},
-  node distance=0.3cm
-]
-  \node[kbox, fill=Navy] (k1)
-    {\textbf{1. Methodology:}
-     range $\to$ target $\to$ sweep $W$ $\to$ check II \& area.
-     Follow all 4 steps every time.};
-  \node[kbox, fill=Orange, below=of k1] (k2)
-    {\textbf{2. Accumulator rule:}
-     $W_{\text{acc}} = W_{\text{data}} + \lceil\log_2 N\rceil$;\;
-     $I_{\text{acc}} = I_{\text{data}} + \lceil\log_2 N\rceil$.
-     Never guess --- derive it.};
-  \node[kbox, fill=Teal, below=of k2] (k3)
-    {\textbf{3. Measure SNR:}
-     run a C testbench with real inputs.
-     Theory gives you a starting point; simulation gives you the answer.};
-  \node[kbox, fill=GreenHi, below=of k3] (k4)
-    {\textbf{4. \texttt{ap\_fixed} vs.\ float:}
-     fixed-point gives II\,=\,1 and far lower area.
-     Choose the smallest $W$ that meets your SNR target.};
-\end{tikzpicture}
+\begin{enumerate}
+  \item \textbf{Methodology:} range $\to$ target $\to$ sweep $W$ $\to$ check II \& area. Follow all 4 steps every time.
+  \item \textbf{Accumulator rule:} $W_{\text{acc}} = W_{\text{data}} + \lceil\log_2 N\rceil$;\; $I_{\text{acc}} = I_{\text{data}} + \lceil\log_2 N\rceil$. Never guess --- derive it.
+  \item \textbf{Measure SNR:} run a C testbench with real inputs. Theory gives you a starting point; simulation gives you the answer.
+  \item \textbf{\texttt{ap\_fixed} vs.\ float:} fixed-point gives II\,=\,1 and far lower area. Choose the smallest $W$ that meets your SNR target.
+\end{enumerate}
 \end{frame}
 
 %% SLIDE 30

@@ -1,0 +1,682 @@
+\PassOptionsToPackage{table}{xcolor}
+\documentclass[10pt,aspectratio=169]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{xcolor}
+% tabularx removed
+\usepackage{colortbl}
+\usepackage{array}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{microtype}
+
+%% ── Colours ────────────────────────────────────────────────
+\definecolor{LightBlue}{HTML}{EBF5FB}
+\definecolor{Navy}{HTML}{1A3A5C}
+\definecolor{NavyDk}{HTML}{102640}
+\definecolor{Blue}{HTML}{0D6FA8}
+\definecolor{Teal}{HTML}{0C7A6B}
+\definecolor{C2}{HTML}{065A82}
+\definecolor{C3}{HTML}{0F766E}
+\definecolor{C4}{HTML}{1D4ED8}
+\definecolor{C5}{HTML}{6D28D9}
+\definecolor{C6}{HTML}{4B5563}
+\definecolor{CP}{HTML}{065A82}
+\definecolor{CF}{HTML}{0C7A6B}
+\definecolor{Green}{HTML}{16A34A}
+\definecolor{Orange}{HTML}{C05621}
+\definecolor{TxtDk}{HTML}{1E293B}
+\definecolor{TxtMd}{HTML}{475569}
+\definecolor{LtGreen}{HTML}{F0FAF4}
+\definecolor{LtOrange}{HTML}{FEF6ED}
+\definecolor{GBorder}{HTML}{C6E8D1}
+\definecolor{OBorder}{HTML}{F9CFAA}
+
+%% ── Beamer setup ───────────────────────────────────────────
+\usetheme{default}
+\usecolortheme{default}
+\usefonttheme{professionalfonts}
+\setbeamertemplate{navigation symbols}{}
+
+\setbeamercolor{background canvas}{bg=white}
+\setbeamercolor{frametitle}{fg=Navy,bg=white}
+\setbeamercolor{normal text}{fg=TxtDk}
+\setbeamerfont{frametitle}{size=\large,series=\bfseries}
+
+\setbeamertemplate{frametitle}{%
+  \vspace*{0.06cm}%
+  {\usebeamerfont{frametitle}\usebeamercolor[fg]{frametitle}\insertframetitle}%
+  \par\vspace*{0.03cm}%
+  {\color{Navy!30}\hrule height 0.6pt}%
+  \vspace*{0.05cm}%
+}
+
+\setbeamercolor{footerbox}{bg=Navy,fg=white}
+\setbeamertemplate{footline}{%
+  \leavevmode%
+  \hbox{\begin{beamercolorbox}[wd=\paperwidth,ht=0.22cm,dp=0.05cm,
+        leftskip=0.4cm,rightskip=0.4cm]{footerbox}
+    \fontsize{7}{9}\selectfont HW/SW Co-Design 2025/26 $\cdot$ Instituto Superior T\'{e}cnico
+    \hfill \insertframenumber/\inserttotalframenumber
+  \end{beamercolorbox}}%
+}
+
+\setbeamersize{text margin left=0.4cm,text margin right=0.4cm}
+
+%% ── Table helpers ──────────────────────────────────────────
+
+
+
+
+
+
+%% ── Score bar helper (tikz) ────────────────────────────────
+\newcommand{\scorebar}[5]{%
+  \begin{tikzpicture}[baseline=0]
+    \node[anchor=east,minimum width=3.4cm,font=\normalsize\bfseries,
+          text=TxtDk] at (0,0) {#1};
+    \fill[#4] (0.1,-.18) rectangle (#2/#3*10.2+0.1, .22);
+    \node[anchor=west,font=\normalsize\bfseries,text=#4]
+          at (#2/#3*10.2+0.25, 0) {#2};
+  \end{tikzpicture}%
+  \par{\hspace{3.6cm}\small\color{TxtMd}\textit{#5}}\par\vspace{2pt}%
+}
+
+%% ══════════════════════════════════════════════════════════
+\begin{document}
+\setlength{\extrarowheight}{2pt}
+\setlength{\tabcolsep}{4pt}
+\rowcolors{2}{white}{LightBlue}
+
+%% ── SLIDE 1 : Title ────────────────────────────────────────
+{
+\setbeamercolor{background canvas}{bg=NavyDk}
+\setbeamertemplate{footline}{}
+\begin{frame}[plain]
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[Blue] (current page.south west)
+      ++(0.9cm,2.1cm) rectangle ++(0.08cm,2.2cm);
+  \end{tikzpicture}
+  \vspace{1.8cm}
+  \hspace{1.1cm}{\color{white}\fontsize{27}{32}\selectfont\textbf{Evaluation Guide}}\\[0.5cm]
+  \hspace{1.1cm}{\color{Blue!70!white}\Large Lab Report $\cdot$ Project Proposal $\cdot$ Final Presentation}\\[0.3cm]
+  \hspace{1.1cm}{\color{white!60!NavyDk}\large HW/SW Co-Design 2025/26 $\cdot$ Instituto Superior T\'{e}cnico}
+  \vfill
+  \begin{beamercolorbox}[wd=\paperwidth,ht=0.55cm,dp=0.15cm,
+      leftskip=0.4cm]{footerbox}
+    \fontsize{7}{9}\selectfont HW/SW Co-Design 2025/26 $\cdot$ Instituto Superior T\'{e}cnico
+  \end{beamercolorbox}
+\end{frame}
+}
+
+%% ── SLIDE 2 : Three Deliverables ──────────────────────────
+\begin{frame}{Three Assessed Deliverables}
+\vspace{-0.1cm}
+\begin{columns}[T,totalwidth=\textwidth]
+
+\column{\dimexpr\textwidth/3\relax}
+\colorbox{Navy}{\makebox[\linewidth][l]{\hspace{4pt}\strut\textbf{\color{white}\large Lab Report}}}\\[-1pt]
+\colorbox{Navy!80}{\makebox[\linewidth][l]{\hspace{4pt}\strut\color{white!80!Navy}\small GEMM Implementation}}
+\vspace{3pt}
+
+\begin{itemize}\small\color{TxtMd}
+  \item SW Float baseline
+  \item SW Fixed-point + error analysis
+  \item HW/SW Float: AXI-Lite + AXI-Stream/DMA
+  \item HW/SW Fixed-point IP
+  \item Conclusion \& trade-offs
+\end{itemize}
+
+\vspace{6pt}
+\colorbox{Navy}{\makebox[1.8cm]{\color{white}\textbf{20 pts}}}
+\textcolor{TxtMd}{\small\ \ Due: Week 7}
+
+\column{\dimexpr\textwidth/3\relax}
+\colorbox{Blue}{\makebox[\linewidth][l]{\hspace{4pt}\strut\textbf{\color{white}\large Project Proposal}}}\\[-1pt]
+\colorbox{Blue!80}{\makebox[\linewidth][l]{\hspace{4pt}\strut\color{white!80!Blue}\small Week 4 Presentations}}
+\vspace{3pt}
+
+\begin{itemize}\small\color{TxtMd}
+  \item Problem statement \& motivation
+  \item Algorithm + fixed-point considerations
+  \item HW/SW partitioning rationale
+  \item HLS plan, Vivado integration
+  \item Expected performance \& timeline
+\end{itemize}
+
+\vspace{6pt}
+\colorbox{Blue}{\makebox[1.8cm]{\color{white}\textbf{20 pts}}}
+\textcolor{TxtMd}{\small\ \ 15 slides}
+
+\column{\dimexpr\textwidth/3\relax}
+\colorbox{Teal}{\makebox[\linewidth][l]{\hspace{4pt}\strut\textbf{\color{white}\large Final Presentation}}}\\[-1pt]
+\colorbox{Teal!80}{\makebox[\linewidth][l]{\hspace{4pt}\strut\color{white!80!Teal}\small Week 7 Presentations}}
+\vspace{3pt}
+
+\begin{itemize}\small\color{TxtMd}
+  \item Implemented architecture \& HLS results
+  \item System integration + ILA debugging
+  \item SW application + timing measurement
+  \item Measured speedup + resource usage
+  \item Challenges \& lessons learned
+\end{itemize}
+
+\vspace{6pt}
+\colorbox{Teal}{\makebox[1.8cm]{\color{white}\textbf{20 pts}}}
+\textcolor{TxtMd}{\small\ \ 15 slides}
+
+\end{columns}
+
+\vspace{0.25cm}
+{\small\color{TxtMd}\itshape
+  \textbf{Submission (Week 7):} both projects are due at the same deadline.
+  Submit a single zip file containing one folder per project
+  (\texttt{matrix\_multiply/} and \texttt{final\_project/});
+  each folder must include the code and the lab report following the given template.
+  The Project Proposal presentation remains a separate deliverable assessed in Week~4.}
+\end{frame}
+
+%% ── SLIDE 3 : Topics Coverage ──────────────────────────────
+\begin{frame}{Topics Coverage --- Are You Being Exhaustive?}
+\vspace{0.05cm}
+{\small\color{TxtMd}
+  Each topic below must be covered \textbf{at least once} across your two projects ---
+  either in the \textbf{Matrix Multiply} lab report or in the \textbf{Final Project}.
+  You must include a \textbf{topic coverage matrix} in both your final report and
+  your final presentation, indicating in which project each topic was addressed.}
+\vspace{0.05cm}
+\begin{tabular}{m{2.8cm}m{11cm}}
+\rowcolor{Navy}
+\textbf{\color{white}Topic} & \textbf{\color{white}Description}\\
+\textbf{AXI-Lite} & Register-based control interface\\
+\textbf{AXI-Stream} & High-throughput streaming\\
+\textbf{Float $\times$ Fixed} & Data-type trade-off in SW and HW\\
+\textbf{ILA Debugging} & In-system probing, Vivado HW Manager\\
+\textbf{BRAM Storage} & Local buffers in HLS IP\\
+\textbf{Cache Flush/Inv.} & \texttt{Xil\_DCacheFlushRange} for DMA coherency\\
+\textbf{HLS Pragmas} & \texttt{PIPELINE}, \texttt{UNROLL}, \texttt{ARRAY\_PARTITION}\\
+\textbf{DMA Config.} & AXI DMA IP, HP port, \texttt{XAxiDma\_*} driver\\
+\textbf{C Testbench} & Golden reference, tolerance, co-sim waveforms\\
+\textbf{XTime Timing} & Timers outside printf; \texttt{COUNTS\_PER\_SECOND}\\
+\textbf{HW/SW Partition} & Amdahl analysis; which tasks benefit from PL\\
+\end{tabular}
+\end{frame}
+
+%% ═══════════════════════════════════════════════════════════
+%%  PART A — LAB REPORT
+%% ═══════════════════════════════════════════════════════════
+{
+\setbeamercolor{background canvas}{bg=NavyDk}
+\setbeamertemplate{footline}{}
+\begin{frame}[plain]
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[Blue] (current page.south west)
+      ++(0.9cm,2.0cm) rectangle ++(0.08cm,2.2cm);
+  \end{tikzpicture}
+  \vspace{1.6cm}
+  \hspace{1.1cm}{\color{Blue!70!white}\large\textbf{PART A}}\\[0.3cm]
+  \hspace{1.1cm}{\color{white}\fontsize{24}{28}\selectfont\textbf{Lab Report}}\\[0.3cm]
+  \hspace{1.1cm}{\color{white!60!NavyDk}\large HW/SW GEMM Implementation --- 20 pts}
+  \vfill
+  \begin{beamercolorbox}[wd=\paperwidth,ht=0.55cm,dp=0.15cm,leftskip=0.4cm]{footerbox}
+    \fontsize{7}{9}\selectfont HW/SW Co-Design 2025/26 $\cdot$ Instituto Superior T\'{e}cnico
+  \end{beamercolorbox}
+\end{frame}
+}
+
+%% ── SLIDE 5 : Lab Report Score Distribution ────────────────
+\begin{frame}{Lab Report --- Score Distribution}
+\vspace{0.1cm}
+{\setlength{\extrarowheight}{2pt}
+\begin{tabular}{p{4.8cm}p{8.2cm}r}
+\rowcolor{Navy!5}
+\textbf{Sec 1: Introduction} &
+\begin{tikzpicture}[baseline=3pt]
+  \fill[Navy!60] (0,0) rectangle (2/5*7.8cm, 0.32cm);
+\end{tikzpicture} & \textbf{\color{Navy!60}2}\\
+\rowcolor{C2!15}
+\textbf{Sec 2: SW Float} &
+\begin{tikzpicture}[baseline=3pt]
+  \fill[C2] (0,0) rectangle (3/5*7.8cm, 0.32cm);
+\end{tikzpicture} & \textbf{\color{C2}3}\\
+\rowcolor{C3!10}
+\textbf{Sec 3: SW Fixed-Point} &
+\begin{tikzpicture}[baseline=3pt]
+  \fill[C3] (0,0) rectangle (3/5*7.8cm, 0.32cm);
+\end{tikzpicture} & \textbf{\color{C3}3}\\
+\rowcolor{C4!10}
+\textbf{Sec 4: HW/SW Float} &
+\begin{tikzpicture}[baseline=3pt]
+  \fill[C4] (0,0) rectangle (5/5*7.8cm, 0.32cm);
+\end{tikzpicture} & \textbf{\color{C4}5}\\
+\rowcolor{C5!10}
+\textbf{Sec 5: HW/SW Fixed-Point} &
+\begin{tikzpicture}[baseline=3pt]
+  \fill[C5] (0,0) rectangle (5/5*7.8cm, 0.32cm);
+\end{tikzpicture} & \textbf{\color{C5}5}\\
+\rowcolor{C6!10}
+\textbf{Sec 6: Conclusion} &
+\begin{tikzpicture}[baseline=3pt]
+  \fill[C6] (0,0) rectangle (2/5*7.8cm, 0.32cm);
+\end{tikzpicture} & \textbf{\color{C6}2}\\
+\end{tabular}}
+
+\vspace{0.15cm}
+{\small\color{TxtMd}
+\begin{itemize}\setlength{\itemsep}{1pt}
+  \item \textbf{\color{Navy!60}Sec 1 — Introduction:} Title page $\cdot$ Motivation $\cdot$ Lab objectives
+  \item \textbf{\color{C2}Sec 2 — SW Float:} Algorithm correctness $\cdot$ Code quality $\cdot$ Execution time vs.\ $N$
+  \item \textbf{\color{C3}Sec 3 — SW Fixed-Point:} Q-format choice $\cdot$ Timing comparison $\cdot$ MSE error analysis
+  \item \textbf{\color{C4}Sec 4 — HW/SW Float:} AXI-Lite + AXI-Stream/DMA integration $\cdot$ Resource report $\cdot$ Speedup
+  \item \textbf{\color{C5}Sec 5 — HW/SW Fixed-Point:} \texttt{ap\_fixed} IP $\cdot$ Float vs.\ Fixed accuracy trade-off
+  \item \textbf{\color{C6}Sec 6 — Conclusion:} Trade-off discussion $\cdot$ Lessons learned
+\end{itemize}
+\vspace{0.05cm}
+
+
+\vspace{0.1cm}
+{\small\color{Orange}\textbf{$\Rightarrow$ All developed code must be submitted together with the report so that the claims can be verified.}}}
+\end{frame}
+
+
+%% ── SLIDE 5b : Section 1 — Introduction ──────────────────
+\begin{frame}{Section 1 --- Introduction}
+\setlength{\extrarowheight}{2pt}\setlength{\tabcolsep}{4pt}
+\begin{tabular}{m{3.8cm}m{8.8cm}>{\raggedleft\arraybackslash}m{1.4cm}}
+\rowcolor{Navy!70}
+\textbf{\color{white}Sub-item / Criterion} &
+\textbf{\color{white}What we assess} &
+\textbf{\color{white}Pts} \tabularnewline
+\textbf{1.1\ \ Motivation} &
+  {\color{TxtMd}Need for hardware acceleration explained; Zybo-Z7 / Zynq-7000 architecture benefits stated.} &
+  \textbf{\color{Navy!80}1} \tabularnewline
+\textbf{1.2\ \ Objectives} &
+  {\color{TxtMd}Primary goals listed (float/fixed implementations, AXI-Lite vs.\ AXI-Stream/DMA comparison, speedup targets).} &
+  \textbf{\color{Navy!80}1} \tabularnewline
+\textbf{1.3\ \ Report Structure} &
+  {\color{TxtMd}Brief overview of each subsequent section provided. \textit{Penalty if absent.}} &
+  \textbf{\color{Orange}-1} \tabularnewline
+\end{tabular}
+\end{frame}
+
+%% ── SLIDE 6 : Section 2 — SW Float ────────────────────────
+\begin{frame}{Section 2 --- Software Implementation: Float}
+\setlength{\extrarowheight}{2pt}\setlength{\tabcolsep}{4pt}
+\begin{tabular}{m{3.8cm}m{8.8cm}>{\raggedleft\arraybackslash}m{1.4cm}}
+\rowcolor{C2}
+\textbf{\color{white}Sub-item / Criterion} &
+\textbf{\color{white}What we assess} &
+\textbf{\color{white}Pts} \tabularnewline
+\textbf{2.1\ \ Algorithm Description} &
+  {\color{TxtMd}Triple-nested loop shown; O($n^3$) complexity stated; float/double type justified; variable naming clear.} &
+  \textbf{\color{C2}1} \tabularnewline
+\textbf{2.2.1\ \ Code Size} &
+  {\color{TxtMd}\texttt{.text} / \texttt{.data} / \texttt{.bss} from compiler \texttt{size} output; heap and stack sizes stated; total in hex or decimal.} &
+  \textbf{\color{C2}1} \tabularnewline
+\textbf{2.2.2\ \ Execution Time vs.\ Matrix Size} &
+  {\color{TxtMd}$\geq$4 matrix sizes tested (e.g.\ 64--1024); table + graph; O($n^3$) growth discussed; \texttt{XTime\_GetTime} used (excludes I/O).} &
+  \textbf{\color{C2}1} \tabularnewline
+\end{tabular}
+\end{frame}
+
+%% ── SLIDE 7 : Section 3 — SW Fixed-Point ──────────────────
+\begin{frame}{Section 3 --- Software Implementation: Fixed-Point}
+\setlength{\extrarowheight}{2pt}\setlength{\tabcolsep}{4pt}
+\begin{tabular}{m{3.8cm}m{8.8cm}>{\raggedleft\arraybackslash}m{1.4cm}}
+\rowcolor{C3}
+\textbf{\color{white}Sub-item / Criterion} &
+\textbf{\color{white}What we assess} &
+\textbf{\color{white}Pts} \tabularnewline
+\textbf{3.1\ \ Algorithm Changes \& Q-Format} &
+  {\color{TxtMd}Q-format selected with justification; integer arithmetic shown; overflow strategy described (saturate/scale). \textit{Penalty if absent.}} &
+  \textbf{\color{Orange}-1} \tabularnewline
+\textbf{3.2.1\ \ Code Size} &
+  {\color{TxtMd}\texttt{.text} / \texttt{.data} / \texttt{.bss} reported; heap and stack sizes stated; size difference vs.\ float version noted and explained.} &
+  \textbf{\color{C3}1} \tabularnewline
+\textbf{3.2.2\ \ Execution Time vs.\ Matrix Size} &
+  {\color{TxtMd}Table + graph; comparison with SW float baseline; speedup factor computed.} &
+  \textbf{\color{C3}1} \tabularnewline
+\textbf{3.2.3\ \ Error Analysis vs.\ Float Baseline} &
+  {\color{TxtMd}MSE computed per matrix size; precision loss discussed; $\geq$2 Q-formats compared; pass/fail criterion defined.} &
+  \textbf{\color{C3}1} \tabularnewline
+\end{tabular}
+\end{frame}
+
+%% ── SLIDE 8 : Section 4 Part 1 — IP Design ────────────────
+\begin{frame}{Section 4 --- HW/SW Float: IP Design}
+\setlength{\extrarowheight}{2pt}\setlength{\tabcolsep}{4pt}
+\begin{tabular}{m{3.8cm}m{8.8cm}>{\raggedleft\arraybackslash}m{1.4cm}}
+\rowcolor{C4}
+\textbf{\color{white}Sub-item / Criterion} &
+\textbf{\color{white}What we assess} &
+\textbf{\color{white}Pts} \tabularnewline
+\textbf{4.1\ \ AXI-Lite IP} &
+  {\color{TxtMd}\texttt{PIPELINE} / \texttt{UNROLL} pragmas applied and shown; register map documented; C-sim PASS; co-sim waveforms included.} &
+  \textbf{\color{C4}1} \tabularnewline
+\textbf{4.2\ \ AXI-Stream + DMA IP} &
+  {\color{TxtMd}\texttt{hls::stream} interface described; \texttt{XAxiDma} configured; cache \texttt{Flush}/\texttt{Invalidate} applied for DMA coherency; ILA waveforms included.} &
+  \textbf{\color{C4}1} \tabularnewline
+\end{tabular}
+\end{frame}
+
+%% ── SLIDE 9 : Section 4 Part 2 — Results ──────────────────
+\begin{frame}{Section 4 --- HW/SW Float: Results}
+\setlength{\extrarowheight}{2pt}\setlength{\tabcolsep}{4pt}
+\begin{tabular}{m{3.8cm}m{8.8cm}>{\raggedleft\arraybackslash}m{1.4cm}}
+\rowcolor{C4}
+\textbf{\color{white}Sub-item / Criterion} &
+\textbf{\color{white}What we assess} &
+\textbf{\color{white}Pts} \tabularnewline
+\textbf{4.3.1\ \ Code Size} &
+  {\color{TxtMd}SW driver \texttt{.text} / \texttt{.data} / \texttt{.bss} reported for both AXI-Lite and AXI-Stream/DMA versions; heap and stack sizes stated.} &
+  \textbf{\color{C4}0.75} \tabularnewline
+\textbf{4.3.2\ \ Hardware Resource Usage} &
+  {\color{TxtMd}Post-synthesis: LUT/FF/DSP/BRAM for both IPs; $\geq$100\,MHz confirmed; BRAM for local buffers identified.} &
+  \textbf{\color{C4}0.75} \tabularnewline
+\textbf{4.3.3\ \ Execution Time vs.\ Matrix Size} &
+  {\color{TxtMd}Both IPs timed using \texttt{XTime\_GetTime}; total HW/SW time reported per matrix size; table + graph vs.\ SW baseline.} &
+  \textbf{\color{C4}0.75} \tabularnewline
+\textbf{4.3.4\ \ Speedup Comparison} &
+  {\color{TxtMd}$S = T_{\mathrm{sw}}/T_{\mathrm{hw}}$ per matrix size; bar/line chart; bottleneck identified; speedup scaling with $N$ discussed.} &
+  \textbf{\color{C4}0.75} \tabularnewline
+\end{tabular}
+\end{frame}
+
+%% ── SLIDE 10 : Section 5 — HW/SW Fixed-Point ──────────────
+\begin{frame}{Section 5 --- HW/SW Fixed-Point}
+\setlength{\extrarowheight}{2pt}\setlength{\tabcolsep}{4pt}
+\begin{tabular}{m{3.8cm}m{8.8cm}>{\raggedleft\arraybackslash}m{1.4cm}}
+\rowcolor{C5}
+\textbf{\color{white}Sub-item / Criterion} &
+\textbf{\color{white}What we assess} &
+\textbf{\color{white}Pts} \tabularnewline
+\textbf{5.1\ \ Implementation Details} &
+  {\color{TxtMd}\texttt{ap\_fixed<W,I>} types for inputs/outputs/accumulators with justification; BRAM for local buffers; \texttt{PIPELINE II=1} achieved; quantisation mode (\texttt{AP\_RND}/\texttt{AP\_SAT}) selected.} &
+  \textbf{\color{C5}2} \tabularnewline
+\textbf{5.2.1\ \ Code Size} &
+  {\color{TxtMd}\texttt{.text} / \texttt{.data} / \texttt{.bss} reported; heap and stack sizes stated; difference from float version noted.} &
+  \textbf{\color{C5}0.75} \tabularnewline
+\textbf{5.2.2\ \ Hardware Resource Usage} &
+  {\color{TxtMd}LUT/DSP/BRAM vs.\ float IP --- table + commentary; fixed-point advantage in resource count demonstrated.} &
+  \textbf{\color{C5}0.75} \tabularnewline
+\textbf{5.2.3\ \ Execution Time vs.\ Matrix Size} &
+  {\color{TxtMd}Table + graph; comparison with float HW/SW; speedup or parity explained.} &
+  \textbf{\color{C5}0.75} \tabularnewline
+\textbf{5.2.4\ \ Float vs.\ Fixed Comparison} &
+  {\color{TxtMd}Side-by-side: resources, accuracy (MSE), execution time; justified recommendation; $\geq$1 comparison chart.} &
+  \textbf{\color{C5}0.75} \tabularnewline
+\end{tabular}
+\end{frame}
+
+%% ── SLIDE 11 : Section 6 — Conclusion ─────────────────────
+\begin{frame}{Section 6 --- Conclusion}
+\setlength{\extrarowheight}{2pt}\setlength{\tabcolsep}{4pt}
+\begin{tabular}{m{3.8cm}m{8.8cm}>{\raggedleft\arraybackslash}m{1.4cm}}
+\rowcolor{C6}
+\textbf{\color{white}Sub-item / Criterion} &
+\textbf{\color{white}What we assess} &
+\textbf{\color{white}Pts} \tabularnewline
+\textbf{Summary of Findings} &
+  {\color{TxtMd}All four implementations addressed (SW float, SW fixed, HW float, HW fixed); key numbers cited.} &
+  \textbf{\color{C6}1} \tabularnewline
+\textbf{Trade-Off Discussion} &
+  {\color{TxtMd}Precision vs.\ performance vs.\ resources articulated clearly; design recommendation with justification given.} &
+  \textbf{\color{C6}1} \tabularnewline
+\end{tabular}
+\end{frame}
+
+%% ═══════════════════════════════════════════════════════════
+%%  PART B — PROJECT PROPOSAL
+%% ═══════════════════════════════════════════════════════════
+{
+\setbeamercolor{background canvas}{bg=NavyDk}
+\setbeamertemplate{footline}{}
+\begin{frame}[plain]
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[Blue] (current page.south west)
+      ++(0.9cm,2.0cm) rectangle ++(0.08cm,2.2cm);
+  \end{tikzpicture}
+  \vspace{1.6cm}
+  \hspace{1.1cm}{\color{Blue!70!white}\large\textbf{PART B}}\\[0.3cm]
+  \hspace{1.1cm}{\color{white}\fontsize{24}{28}\selectfont\textbf{Project Proposal}}\\[0.3cm]
+  \hspace{1.1cm}{\color{white!60!NavyDk}\large Week 4 Presentations --- 20 pts}
+  \vfill
+  \begin{beamercolorbox}[wd=\paperwidth,ht=0.55cm,dp=0.15cm,leftskip=0.4cm]{footerbox}
+    \fontsize{7}{9}\selectfont HW/SW Co-Design 2025/26 $\cdot$ Instituto Superior T\'{e}cnico
+  \end{beamercolorbox}
+\end{frame}
+}
+
+%% ── SLIDE 13 : Proposal Score Distribution ─────────────────
+\begin{frame}{Project Proposal --- Score Distribution}
+\vspace{0.1cm}
+{\setlength{\extrarowheight}{2pt}\small
+\begin{tabular}{p{4.8cm}p{8.4cm}r}
+\rowcolor{CP!15}
+\textbf{Problem Statement \& Motivation} &
+\begin{tikzpicture}[baseline=3pt]\fill[CP] (0,0) rectangle (2/4*7.8cm, 0.26cm);\end{tikzpicture} &
+\textbf{\color{CP}2}\\
+\rowcolor{CP!8}
+\textbf{Algorithm Description} &
+\begin{tikzpicture}[baseline=3pt]\fill[CP!80] (0,0) rectangle (3/4*7.8cm, 0.26cm);\end{tikzpicture} &
+\textbf{\color{CP}3}\\
+\rowcolor{CP!15}
+\textbf{HW/SW Partitioning} &
+\begin{tikzpicture}[baseline=3pt]\fill[CP!80] (0,0) rectangle (3/4*7.8cm, 0.26cm);\end{tikzpicture} &
+\textbf{\color{CP}3}\\
+\rowcolor{CP!8}
+\textbf{Hardware Architecture} &
+\begin{tikzpicture}[baseline=3pt]\fill[CP!60] (0,0) rectangle (3/4*7.8cm, 0.26cm);\end{tikzpicture} &
+\textbf{\color{CP}3}\\
+\rowcolor{CP!15}
+\textbf{HLS Plan + Testbench} &
+\begin{tikzpicture}[baseline=3pt]\fill[CP!60] (0,0) rectangle (3/4*7.8cm, 0.26cm);\end{tikzpicture} &
+\textbf{\color{CP}3}\\
+\rowcolor{CP!8}
+\textbf{System Integration} &
+\begin{tikzpicture}[baseline=3pt]\fill[Teal] (0,0) rectangle (2/4*7.8cm, 0.26cm);\end{tikzpicture} &
+\textbf{\color{Teal}2}\\
+\rowcolor{CP!15}
+\textbf{Expected Performance} &
+\begin{tikzpicture}[baseline=3pt]\fill[Teal] (0,0) rectangle (2/4*7.8cm, 0.26cm);\end{tikzpicture} &
+\textbf{\color{Teal}2}\\
+\rowcolor{CP!8}
+\textbf{Timeline \& Risks} &
+\begin{tikzpicture}[baseline=3pt]\fill[C6] (0,0) rectangle (1/4*7.8cm, 0.26cm);\end{tikzpicture} &
+\textbf{\color{C6}1}\\
+\rowcolor{CP!15}
+\textbf{Presentation Quality} &
+\begin{tikzpicture}[baseline=3pt]\fill[C6] (0,0) rectangle (1/4*7.8cm, 0.26cm);\end{tikzpicture} &
+\textbf{\color{C6}1}\\
+\end{tabular}}
+\end{frame}
+
+%% ── SLIDE 14 : Proposal Criteria 1/2 ──────────────────────
+\begin{frame}{Project Proposal --- Evaluation Criteria (1\,/\,2)}
+\setlength{\extrarowheight}{2pt}\setlength{\tabcolsep}{4pt}
+\begin{tabular}{m{3.8cm}m{8.8cm}>{\raggedleft\arraybackslash}m{1.4cm}}
+\rowcolor{CP}
+\textbf{\color{white}Sub-item / Criterion} &
+\textbf{\color{white}What we assess} &
+\textbf{\color{white}Pts} \tabularnewline
+\textbf{Problem Statement \& Motivation} &
+  {\color{TxtMd}Application described; bottleneck identified; motivation for HW acceleration convincing; Amdahl insight attempted.} &
+  \textbf{\color{CP}2} \tabularnewline
+\textbf{Algorithm Description} &
+  {\color{TxtMd}Inputs/outputs/O(?) defined; pseudocode or flowchart present; parallelism identified; fixed-point considerations addressed (Q-format or N/A justified).} &
+  \textbf{\color{CP}3} \tabularnewline
+\textbf{HW/SW Partitioning} &
+  {\color{TxtMd}PS/PL task split with rationale; AXI type selected and justified (Lite vs.\ Stream); data flow described; DMA considered if streaming.} &
+  \textbf{\color{CP}3} \tabularnewline
+\textbf{Hardware Architecture} &
+  {\color{TxtMd}Block diagram present; AXI details (width, clock, II target); BRAM plan for local buffers; \texttt{ap\_fixed<W,I>} or float stated; key HLS directives planned.} &
+  \textbf{\color{CP}3} \tabularnewline
+\textbf{HLS Plan + Testbench} &
+  {\color{TxtMd}Specific directives listed (\texttt{PIPELINE II=1}, \texttt{UNROLL}, \texttt{ARRAY\_PARTITION}); golden-reference testbench described; expected II/latency/resources estimated.} &
+  \textbf{\color{CP}3} \tabularnewline
+\end{tabular}
+\end{frame}
+
+%% ── SLIDE 15 : Proposal Criteria 2/2 ──────────────────────
+\begin{frame}{Project Proposal --- Evaluation Criteria (2\,/\,2)}
+\setlength{\extrarowheight}{2pt}\setlength{\tabcolsep}{4pt}
+\begin{tabular}{m{3.8cm}m{8.8cm}>{\raggedleft\arraybackslash}m{1.4cm}}
+\rowcolor{CP}
+\textbf{\color{white}Sub-item / Criterion} &
+\textbf{\color{white}What we assess} &
+\textbf{\color{white}Pts} \tabularnewline
+\textbf{System Integration} &
+  {\color{TxtMd}Vivado block design topology described; address map planned; cache coherency considered (flush/invalidate); ILA monitoring plan included.} &
+  \textbf{\color{CP}2} \tabularnewline
+\textbf{Expected Performance} &
+  {\color{TxtMd}SW baseline estimation method described; target speedup justified; DMA overhead acknowledged; \texttt{XTime\_GetTime} methodology correct.} &
+  \textbf{\color{CP}2} \tabularnewline
+\textbf{Timeline \& Risks} &
+  {\color{TxtMd}Realistic week-by-week plan for Weeks 5--7; $\geq$2 project-specific risks with concrete mitigations.} &
+  \textbf{\color{CP}1} \tabularnewline
+\textbf{Presentation Quality} &
+  {\color{TxtMd}Diagrams on key slides (architecture, partitioning); no placeholder text; template complete; delivered on time; Q\&A handled.} &
+  \textbf{\color{CP}1} \tabularnewline
+\end{tabular}
+\end{frame}
+
+%% ═══════════════════════════════════════════════════════════
+%%  PART C — FINAL PRESENTATION
+%% ═══════════════════════════════════════════════════════════
+{
+\setbeamercolor{background canvas}{bg=NavyDk}
+\setbeamertemplate{footline}{}
+\begin{frame}[plain]
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[Teal] (current page.south west)
+      ++(0.9cm,2.0cm) rectangle ++(0.08cm,2.2cm);
+  \end{tikzpicture}
+  \vspace{1.6cm}
+  \hspace{1.1cm}{\color{Teal!70!white}\large\textbf{PART C}}\\[0.3cm]
+  \hspace{1.1cm}{\color{white}\fontsize{24}{28}\selectfont\textbf{Final Presentation}}\\[0.3cm]
+  \hspace{1.1cm}{\color{white!60!NavyDk}\large Week 7 Presentations --- 20 pts}
+  \vfill
+  \begin{beamercolorbox}[wd=\paperwidth,ht=0.55cm,dp=0.15cm,leftskip=0.4cm]{footerbox}
+    \fontsize{7}{9}\selectfont HW/SW Co-Design 2025/26 $\cdot$ Instituto Superior T\'{e}cnico
+  \end{beamercolorbox}
+\end{frame}
+}
+
+%% ── SLIDE 17 : Final Score Distribution ────────────────────
+\begin{frame}{Final Presentation --- Score Distribution}
+\vspace{0.1cm}
+{\setlength{\extrarowheight}{1pt}\small
+\begin{tabular}{p{4.8cm}p{8.4cm}r}
+\rowcolor{CF!15}
+\textbf{Overview \& Objectives} &
+\begin{tikzpicture}[baseline=3pt]\fill[CF!60] (0,0) rectangle (1/4*7.8cm, 0.24cm);\end{tikzpicture} &
+\textbf{\color{CF}1}\\
+\rowcolor{CF!8}
+\textbf{Algo.\ \& HW/SW Split} &
+\begin{tikzpicture}[baseline=3pt]\fill[CF] (0,0) rectangle (2/4*7.8cm, 0.24cm);\end{tikzpicture} &
+\textbf{\color{CF}2}\\
+\rowcolor{CF!15}
+\textbf{Hardware Architecture} &
+\begin{tikzpicture}[baseline=3pt]\fill[CF] (0,0) rectangle (2/4*7.8cm, 0.24cm);\end{tikzpicture} &
+\textbf{\color{CF}2}\\
+\rowcolor{CF!8}
+\textbf{HLS Implementation} &
+\begin{tikzpicture}[baseline=3pt]\fill[C4] (0,0) rectangle (3/4*7.8cm, 0.24cm);\end{tikzpicture} &
+\textbf{\color{C4}3}\\
+\rowcolor{CF!15}
+\textbf{System Integration} &
+\begin{tikzpicture}[baseline=3pt]\fill[CF] (0,0) rectangle (2/4*7.8cm, 0.24cm);\end{tikzpicture} &
+\textbf{\color{CF}2}\\
+\rowcolor{CF!8}
+\textbf{Software Application} &
+\begin{tikzpicture}[baseline=3pt]\fill[CF] (0,0) rectangle (2/4*7.8cm, 0.24cm);\end{tikzpicture} &
+\textbf{\color{CF}2}\\
+\rowcolor{CF!15}
+\textbf{Results} &
+\begin{tikzpicture}[baseline=3pt]\fill[C5] (0,0) rectangle (4/4*7.8cm, 0.24cm);\end{tikzpicture} &
+\textbf{\color{C5}4}\\
+\rowcolor{CF!8}
+\textbf{Challenges \& Concl.} &
+\begin{tikzpicture}[baseline=3pt]\fill[Navy] (0,0) rectangle (2/4*7.8cm, 0.24cm);\end{tikzpicture} &
+\textbf{\color{Navy}2}\\
+\rowcolor{CF!15}
+\textbf{Presentation Quality} &
+\begin{tikzpicture}[baseline=3pt]\fill[C6] (0,0) rectangle (2/4*7.8cm, 0.24cm);\end{tikzpicture} &
+\textbf{\color{C6}2}\\
+\end{tabular}}
+
+\vspace{0.12cm}
+{\small\color{Orange}\textbf{$\Rightarrow$ All developed code and a written report (structured like the Lab Report) must be submitted together with the presentation. Both the code and the report must support and substantiate the claims made in the slides.}}
+\end{frame}
+
+%% ── SLIDE 18 : Final Criteria 1/2 ─────────────────────────
+\begin{frame}{Final Presentation --- Evaluation Criteria (1\,/\,2)}
+\setlength{\extrarowheight}{2pt}\setlength{\tabcolsep}{4pt}
+\begin{tabular}{m{3.8cm}m{8.8cm}>{\raggedleft\arraybackslash}m{1.4cm}}
+\rowcolor{CF}
+\textbf{\color{white}Sub-item / Criterion} &
+\textbf{\color{white}What we assess} &
+\textbf{\color{white}Pts} \tabularnewline
+\textbf{Overview \& Objectives} &
+  {\color{TxtMd}Application and objectives stated; comparison vs.\ proposal targets (met/not met); scope changes from proposal explained.} &
+  \textbf{\color{CF}1} \tabularnewline
+\textbf{Algo.\ \& HW/SW Split} &
+  {\color{TxtMd}Final PS/PL diagram shown; rationale for any changes from proposal; interface type and data flow confirmed.} &
+  \textbf{\color{CF}2} \tabularnewline
+\textbf{Hardware Architecture} &
+  {\color{TxtMd}Implemented block diagram shown; IP ports/data width/clock stated; BRAM usage for local buffers explained; float vs.\ \texttt{ap\_fixed} choice justified.} &
+  \textbf{\color{CF}2} \tabularnewline
+\textbf{HLS Implementation} &
+  {\color{TxtMd}Directives with rationale shown; II achieved + schedule view discussed; C-sim \& co-sim results stated; float vs.\ fixed decision justified.} &
+  \textbf{\color{CF}3} \tabularnewline
+\textbf{System Integration} &
+  {\color{TxtMd}Vivado block design shown; ILA signals named and waveforms interpreted; cache flush/invalidate in SW explained; DMA setup described.} &
+  \textbf{\color{CF}2} \tabularnewline
+\end{tabular}
+\end{frame}
+
+%% ── SLIDE 19 : Final Criteria 2/2 ─────────────────────────
+\begin{frame}{Final Presentation --- Evaluation Criteria (2\,/\,2)}
+\setlength{\extrarowheight}{2pt}\setlength{\tabcolsep}{4pt}
+\begin{tabular}{m{3.8cm}m{8.8cm}>{\raggedleft\arraybackslash}m{1.4cm}}
+\rowcolor{CF}
+\textbf{\color{white}Sub-item / Criterion} &
+\textbf{\color{white}What we assess} &
+\textbf{\color{white}Pts} \tabularnewline
+\textbf{Software Application} &
+  {\color{TxtMd}Init $\to$ execute $\to$ verify flow shown; \texttt{XTime\_GetTime} timing outside printf; \texttt{COUNTS\_PER\_SECOND} used; correctness check vs.\ SW reference shown.} &
+  \textbf{\color{CF}2} \tabularnewline
+\textbf{Results} &
+  {\color{TxtMd}SW and HW timing measured; $S=T_{\mathrm{sw}}/T_{\mathrm{hw}}$ charted ($\geq$3 sizes); resource table (LUT/FF/DSP/BRAM); DMA overhead isolated; meets/misses proposal target explained.} &
+  \textbf{\color{CF}4} \tabularnewline
+\textbf{Challenges \& Concl.} &
+  {\color{TxtMd}$\geq$2 real technical challenges with root cause + fix (not just ``Vivado crashed''); substantive lessons; concrete future work suggestions.} &
+  \textbf{\color{CF}2} \tabularnewline
+\textbf{Presentation Quality} &
+  {\color{TxtMd}Diagrams on all architecture/result slides; no placeholder text; delivered within 15\,min; clear Q\&A answers.} &
+  \textbf{\color{CF}2} \tabularnewline
+\end{tabular}
+\end{frame}
+
+%% ── SLIDE 20 : Master Grading Summary ──────────────────────
+\begin{frame}{Master Grading Summary}
+\setlength{\extrarowheight}{2pt}\setlength{\tabcolsep}{4pt}
+{\small\rowcolors{0}{}{}
+\begin{tabular}{p{2.7cm}>{\raggedleft\arraybackslash}p{0.5cm}p{3.3cm}>{\raggedleft\arraybackslash}p{0.5cm}p{3.3cm}>{\raggedleft\arraybackslash}p{0.5cm}}
+\rowcolor{Navy}\textbf{\color{white}Lab Report} & \textbf{\color{white}20} &
+\cellcolor{Blue}\textbf{\color{white}Project Proposal} & \cellcolor{Blue}\textbf{\color{white}20} &
+\cellcolor{Teal}\textbf{\color{white}Final Presentation} & \cellcolor{Teal}\textbf{\color{white}20} \tabularnewline
+Introduction & \textbf{\color{Navy!60}2} & Problem Statement & \textbf{\color{CP}2} & Overview \& Objectives & \textbf{\color{CF}1} \tabularnewline
+SW Float & \textbf{\color{C2}3} & Algorithm Description & \textbf{\color{CP}3} & Algo.\ \& HW/SW Split & \textbf{\color{CF}2} \tabularnewline
+SW Fixed-Point & \textbf{\color{C3}3} & HW/SW Partitioning & \textbf{\color{CP}3} & HW Architecture & \textbf{\color{CF}2} \tabularnewline
+HW/SW Float & \textbf{\color{C4}5} & HW Architecture & \textbf{\color{CP}3} & HLS Implementation & \textbf{\color{C4}3} \tabularnewline
+HW/SW Fixed & \textbf{\color{C5}5} & HLS Plan + Testbench & \textbf{\color{CP}3} & System Integration & \textbf{\color{CF}2} \tabularnewline
+Conclusion & \textbf{\color{C6}2} & System Integration & \textbf{\color{Teal}2} & Software Application & \textbf{\color{CF}2} \tabularnewline
+ & & Expected Performance & \textbf{\color{Teal}2} & Results & \textbf{\color{C5}4} \tabularnewline
+ & & Timeline \& Risks & \textbf{\color{C6}1} & Challenges \& Concl. & \textbf{\color{CF}2} \tabularnewline
+ & & Presentation Quality & \textbf{\color{C6}1} & Presentation Quality & \textbf{\color{CF}2} \tabularnewline
+\end{tabular}}
+\end{frame}
+
+\end{document}
